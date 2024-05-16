@@ -33,7 +33,7 @@ datadir=/home/karoy84/scratch/data
 export NCCL_BLOCKING_WAIT=1 #Pytorch Lightning uses the NCCL backend for inter-GPU communication by default. Set this variable to avoid timeout errors.
 
 tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false & \
-    srun python /home/karoy84/scratch/app/src/train/selfsupervised/train.py \
+    srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --batch_size 256 \
     --epoch 2 \
     --num_workers 10 \

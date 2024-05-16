@@ -108,16 +108,21 @@ def main(args):
                                             shuffle=True,
                                             drop_last=True,
                                             num_workers=dict_args['num_workers'],
-                                            pin_memory=True
+                                            pin_memory=dict_args['pin_memory']
                                             )
     print(len(dataloader))
     model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
     
-    # trainer = L.Trainer(max_epochs=dict_args['epoch'],
-    #                     val_check_interval=dict_args['val_freq'],
-    #                     gradient_clip_val=dict_args['clip_grad_norm'],
-    # accelerator="gpu", devices=2, num_nodes=1, strategy='ddp', max_epochs = args.max_epochs, enable_progress_bar=False
-    #                     )
+    trainer = L.Trainer(max_epochs=dict_args['epoch'],
+                        val_check_interval=dict_args['val_freq'],
+                        gradient_clip_val=dict_args['clip_grad_norm'],
+                        accelerator="gpu", 
+                        devices=1, 
+                        num_nodes=5, 
+                        strategy='ddp',
+                        enable_progress_bar=False
+                        )
+    
     # trainer.fit(model=model, train_dataloaders=dataloader)
 
 
