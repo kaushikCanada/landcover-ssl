@@ -116,7 +116,6 @@ def main(args):
     model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
     
     trainer = L.Trainer(max_epochs=dict_args['epoch'],
-                        val_check_interval=dict_args['val_freq'],
                         gradient_clip_val=dict_args['clip_grad_norm'],
                         accelerator="gpu", 
                         devices=dict_args['gpus_per_node'], 
