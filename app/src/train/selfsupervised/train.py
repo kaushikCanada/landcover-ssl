@@ -12,7 +12,6 @@ import torch
 import rasterio
 import glob
 import timm
-# import mlflow
 from torch import nn
 from tqdm import tqdm
 from rasterio.enums import Resampling
