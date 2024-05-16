@@ -124,7 +124,7 @@ def main(args):
                         enable_progress_bar=False
                         )
     
-    # trainer.fit(model=model, train_dataloaders=dataloader)
+    trainer.fit(model=model, train_dataloaders=dataloader)
 
 
 if __name__ == "__main__":
