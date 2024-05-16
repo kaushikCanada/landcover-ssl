@@ -61,6 +61,8 @@ def parse_args():
     parser.add_argument('--lr', help='learning_rate for pose. default = 0.001', default=0.001, type=float)
     parser.add_argument('--display_freq', help='Frequency to display result image on Tensorboard, in batch units', default=64, type=int)
     parser.add_argument('--epoch', help='# of epochs. default = 2', default=2, type=int)
+    parser.add_argument('--gpus_per_node', help='# of gpus per node. default = 1', default=1, type=int)
+    parser.add_argument('--number_of_nodes', help='# of nodes. default = 1', default=1, type=int)
     parser.add_argument('--clip_grad_norm', help='Clipping gradient norm, 0 means no clipping', type=float, default=0.)
     parser.add_argument('--pin_memory', help='Whether to utilize pin_memory in dataloader', type=bool, default=True)
     parser.add_argument("--limit", type=int, default=5, help="no. of records to process")
@@ -117,8 +119,8 @@ def main(args):
                         val_check_interval=dict_args['val_freq'],
                         gradient_clip_val=dict_args['clip_grad_norm'],
                         accelerator="gpu", 
-                        devices=1, 
-                        num_nodes=5, 
+                        devices=dict_args['gpus_per_node'], 
+                        num_nodes=dict_args['number_of_nodes'], 
                         strategy='ddp',
                         enable_progress_bar=False
                         )
