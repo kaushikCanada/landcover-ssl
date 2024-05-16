@@ -1,9 +1,11 @@
 #!/bin/bash
+GPUS_PER_NODE=1
+NUMBER_OF_NODES=2
 #SBATCH --time=0-10:00:00
 #SBATCH --account=def-sh1352
-#SBATCH --mem=32000M            # memory per node
-#SBATCH --nodes=2                # total number of nodes (N to be defined)
-#SBATCH --gpus-per-node=1       # # number of GPUs reserved per node (here 1)
+#SBATCH --mem=32000M                    # memory per node
+#SBATCH --nodes=$NUMBER_OF_NODES        # total number of nodes (N to be defined)
+#SBATCH --gpus-per-node=$GPUS_PER_NODE  # number of GPUs reserved per node (here 1)
 #SBATCH --cpus-per-task=8      # CPU cores/threads
 #SBATCH --output=landcover.out
 #SBATCH --tasks-per-node=1
@@ -38,8 +40,8 @@ tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false &
     srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --batch_size 256 \
     --epoch 2 \
-    --gpus_per_node 1 \
-    --number_of_nodes 2 \
+    --gpus_per_node $GPUS_PER_NODE \
+    --number_of_nodes $NUMBER_OF_NODES \
     --num_workers 8 \
     --logdir ${logdir} \
     --data_dir  ${datadir}
