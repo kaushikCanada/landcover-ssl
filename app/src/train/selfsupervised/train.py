@@ -115,19 +115,39 @@ def main(args):
     print(len(dataloader))
     model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
     print(model)
-    trainer = L.Trainer(max_epochs=dict_args['epoch'],
-                        gradient_clip_val=dict_args['clip_grad_norm'],
-                        accelerator="gpu", 
-                        logger=None,
-                        devices=dict_args['gpus_per_node'], 
-                        num_nodes=dict_args['number_of_nodes'], 
-                        strategy='auto',
-                        enable_progress_bar=True
-                        )
+    # trainer = L.Trainer(max_epochs=dict_args['epoch'],
+    #                     gradient_clip_val=dict_args['clip_grad_norm'],
+    #                     accelerator="gpu", 
+    #                     logger=None,
+    #                     devices=dict_args['gpus_per_node'], 
+    #                     num_nodes=dict_args['number_of_nodes'], 
+    #                     strategy='auto',
+    #                     enable_progress_bar=True
+    #                     )
+    # trainer.fit(model=model, train_dataloaders=dataloader)
 
-    # for batch in tqdm(dataloader):
-    #     pass
-    trainer.fit(model=model, train_dataloaders=dataloader)
+    
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    print("Starting Training")
+    for epoch in range(dict_args['epoch']):
+        total_loss = 0
+        for batch in tqdm(dataloader):
+            new_batch = []
+            for image in batch['image']:
+                new_batch+=[image.to(device).squeeze(1)]
+            x0,x1 = new_batch
+            z0 = model(x0)
+            z1 = model(x1)
+            loss = criterion(z0, z1)
+            total_loss += loss.detach()
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+        avg_loss = total_loss / len(dataloader)
+        print(f"epoch: {epoch:>02}, loss: {avg_loss:.5f}")
+
+
 
 
 if __name__ == "__main__":
