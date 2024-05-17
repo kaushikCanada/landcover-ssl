@@ -121,12 +121,12 @@ def main(args):
                         devices=dict_args['gpus_per_node'], 
                         num_nodes=dict_args['number_of_nodes'], 
                         strategy='ddp',
-                        enable_progress_bar=False
+                        enable_progress_bar=True
                         )
 
-    for batch in tqdm(dataloader):
-        pass
-    # trainer.fit(model=model, train_dataloaders=dataloader)
+    # for batch in tqdm(dataloader):
+    #     pass
+    trainer.fit(model=model, train_dataloaders=dataloader)
 
 
 if __name__ == "__main__":
