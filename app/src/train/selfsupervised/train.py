@@ -126,6 +126,8 @@ def main(args):
     #                     )
     # trainer.fit(model=model, train_dataloaders=dataloader)
 
+    criterion = BarlowTwinsLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
