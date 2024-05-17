@@ -72,6 +72,19 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def checkpoint(model, filename):
+    # torch.save(model.state_dict(), filename)
+    torch.save({
+                    'optimizer': optimizer.state_dict(),
+                    'model': model.state_dict(),
+                }, filename)
+    
+def resume(model, filename):
+    # model.load_state_dict(torch.load(filename))
+    checkpoint = torch.load(filename)
+    model.load_state_dict(checkpoint['model'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+    
 def main(args):
     """Main function of the script."""
 
@@ -137,8 +150,8 @@ def main(args):
 
     start_epoch = 0
     if start_epoch > 0:
-    resume_epoch = start_epoch - 1
-    resume(model, f"epoch-{resume_epoch}.pth")
+        resume_epoch = start_epoch - 1
+        resume(model, f"{output_path}/barlow-epoch-{resume_epoch}.pth")
     
     print("Starting Training")
     for epoch in range(start_epoch, dict_args['epoch']):
@@ -158,6 +171,7 @@ def main(args):
             optimizer.zero_grad()
         avg_loss = total_loss / len(dataloader)
         print(f"epoch: {epoch:>02}, loss: {avg_loss:.5f}")
+        checkpoint(model, f"{output_path}/barlow-epoch-{epoch}.pth")
 
 
 
