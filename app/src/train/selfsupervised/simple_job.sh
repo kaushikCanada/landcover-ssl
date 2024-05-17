@@ -1,12 +1,15 @@
 #!/bin/bash
+#SBATCH --job-name=landcover     # create a short name for your job
 #SBATCH --time=0-10:00:00
 #SBATCH --account=def-sh1352
-#SBATCH --mem=32000M            # memory per node
-#SBATCH --nodes=4                # total number of nodes (N to be defined)
+#SBATCH --mem=64000M            # memory per node
+#SBATCH --nodes=1                # total number of nodes (N to be defined)
 #SBATCH --gpus-per-node=1       # # number of GPUs reserved per node (here 1)
-#SBATCH --cpus-per-task=8      # CPU cores/threads
+#SBATCH --cpus-per-task=20      # CPU cores/threads
 #SBATCH --output=landcover.out
 #SBATCH --tasks-per-node=1
+#SBATCH --mail-type=begin        # send email when job begins
+#SBATCH --mail-type=end          # send email when job ends
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 echo "Hello World"
@@ -21,12 +24,12 @@ logdir=/home/karoy84/scratch/logs
 datadir=/home/karoy84/scratch/data
 export NCCL_BLOCKING_WAIT=1
 
-# tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false & \
-srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
+tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false & \
+python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --batch_size 256 \
     --epoch 2 \
     --gpus_per_node 1 \
-    --number_of_nodes 4 \
+    --number_of_nodes 1 \
     --num_workers 8 \
     --logdir ${logdir} \
     --data_dir  ${datadir}
