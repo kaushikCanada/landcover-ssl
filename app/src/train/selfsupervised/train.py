@@ -121,7 +121,7 @@ def main(args):
                         logger=None,
                         devices=dict_args['gpus_per_node'], 
                         num_nodes=dict_args['number_of_nodes'], 
-                        strategy='ddp',
+                        strategy='auto',
                         enable_progress_bar=True
                         )
 
