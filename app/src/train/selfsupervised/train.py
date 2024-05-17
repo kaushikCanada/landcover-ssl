@@ -126,11 +126,13 @@ def main(args):
     #                     )
     # trainer.fit(model=model, train_dataloaders=dataloader)
 
-    criterion = BarlowTwinsLoss()
+    resnet=timm.create_model("resnet18",num_classes=0,in_chans=11)
+    backbone = nn.Sequential(*list(resnet.children())[:-1])
+    model = BarlowTwins(backbone)
     optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
-    
+    criterion = BarlowTwinsLoss()
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
+    model.to(device)
     print("Starting Training")
     for epoch in range(dict_args['epoch']):
         total_loss = 0
