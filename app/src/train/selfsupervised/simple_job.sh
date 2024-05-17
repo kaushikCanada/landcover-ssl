@@ -30,6 +30,6 @@ python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --epoch 2 \
     --gpus_per_node 1 \
     --number_of_nodes 1 \
-    --num_workers 8 \
+    --num_workers 20 \
     --logdir ${logdir} \
     --data_dir  ${datadir}
