@@ -26,4 +26,4 @@ echo "WORLD_SIZE="$WORLD_SIZE
 
 # The $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) variable tells the script how many processes are available for this execution. “srun” executes the script <tasks-per-node * nodes> times
 
-srun python pytorch-ddp-test.py --init_method tcp://$MASTER_ADDR:3456 --batch_size 32
+srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py --init_method tcp://$MASTER_ADDR:3456 --batch_size 32
