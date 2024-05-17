@@ -60,6 +60,7 @@ def parse_args():
     parser.add_argument('--logdir', help='logdir for models and losses. default = .', default='./', type=str)
     parser.add_argument('--lr', help='learning_rate for pose. default = 0.001', default=0.001, type=float)
     parser.add_argument('--display_freq', help='Frequency to display result image on Tensorboard, in batch units', default=64, type=int)
+    parser.add_argument('--start_epoch', help='# of epochs. default = 0', default=0, type=int)
     parser.add_argument('--epoch', help='# of epochs. default = 2', default=2, type=int)
     parser.add_argument('--gpus_per_node', help='# of gpus per node. default = 1', default=1, type=int)
     parser.add_argument('--number_of_nodes', help='# of nodes. default = 1', default=1, type=int)
@@ -89,7 +90,7 @@ def main(args):
     """Main function of the script."""
 
     dict_args = vars(args)
-
+        
     # Initialize logging paths
     now = datetime.datetime.now().strftime('%m%d%H%M%S')
     weight_save_dir = os.path.join(dict_args["logdir"], os.path.join('models', 'state_dict', now))
@@ -148,7 +149,7 @@ def main(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
 
-    start_epoch = 0
+    start_epoch = dict_args['start_epoch']
     if start_epoch > 0:
         resume_epoch = start_epoch - 1
         resume(model, f"{output_path}/barlow-epoch-{resume_epoch}.pth")
@@ -157,6 +158,7 @@ def main(args):
     for epoch in range(start_epoch, dict_args['epoch']):
         model.train()
         total_loss = 0
+        batch_count = 1
         for batch in tqdm(dataloader):
             new_batch = []
             for image in batch['image']:
@@ -169,6 +171,10 @@ def main(args):
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+
+            batch_count += 1
+            if batch_count>dict_args['limit']:
+                break
         avg_loss = total_loss / len(dataloader)
         print(f"epoch: {epoch:>02}, loss: {avg_loss:.5f}")
         checkpoint(model, f"{output_path}/barlow-epoch-{epoch}.pth")
