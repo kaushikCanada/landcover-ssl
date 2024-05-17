@@ -126,6 +126,7 @@ def main(args):
     #                     )
     # trainer.fit(model=model, train_dataloaders=dataloader)
 
+    
     resnet=timm.create_model("resnet18",num_classes=0,in_chans=11)
     backbone = nn.Sequential(*list(resnet.children())[:-1])
     model = BarlowTwins(backbone)
@@ -133,8 +134,15 @@ def main(args):
     criterion = BarlowTwinsLoss()
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
+
+    start_epoch = 0
+    if start_epoch > 0:
+    resume_epoch = start_epoch - 1
+    resume(model, f"epoch-{resume_epoch}.pth")
+    
     print("Starting Training")
-    for epoch in range(dict_args['epoch']):
+    for epoch in range(start_epoch, dict_args['epoch']):
+        model.train()
         total_loss = 0
         for batch in tqdm(dataloader):
             new_batch = []
