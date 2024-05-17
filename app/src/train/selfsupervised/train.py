@@ -118,6 +118,7 @@ def main(args):
     trainer = L.Trainer(max_epochs=dict_args['epoch'],
                         gradient_clip_val=dict_args['clip_grad_norm'],
                         accelerator="gpu", 
+                        logger=None,
                         devices=dict_args['gpus_per_node'], 
                         num_nodes=dict_args['number_of_nodes'], 
                         strategy='ddp',
