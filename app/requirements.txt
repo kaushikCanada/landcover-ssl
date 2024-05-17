@@ -1,2 +1,4 @@
 torchgeo
 lightly
+tensorflow
+tensorboard
