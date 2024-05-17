@@ -172,9 +172,11 @@ def main(args):
             optimizer.step()
             optimizer.zero_grad()
 
-            batch_count += 1
-            if batch_count>dict_args['limit']:
-                break
+            if dict_args['limit']>0:
+                batch_count += 1
+                if batch_count>dict_args['limit']:
+                    break
+                    
         avg_loss = total_loss / len(dataloader)
         print(f"epoch: {epoch:>02}, loss: {avg_loss:.5f}")
         checkpoint(model, f"{output_path}/barlow-epoch-{epoch}.pth")
