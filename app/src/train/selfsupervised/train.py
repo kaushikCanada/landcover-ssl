@@ -114,7 +114,7 @@ def main(args):
                                             )
     print(len(dataloader))
     model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
-    
+    print(model)
     trainer = L.Trainer(max_epochs=dict_args['epoch'],
                         gradient_clip_val=dict_args['clip_grad_norm'],
                         accelerator="gpu", 
@@ -123,8 +123,10 @@ def main(args):
                         strategy='ddp',
                         enable_progress_bar=False
                         )
-    
-    trainer.fit(model=model, train_dataloaders=dataloader)
+
+    for batch in tqdm(dataloader):
+        pass
+    # trainer.fit(model=model, train_dataloaders=dataloader)
 
 
 if __name__ == "__main__":
