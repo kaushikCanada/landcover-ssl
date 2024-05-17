@@ -21,8 +21,8 @@ logdir=/home/karoy84/scratch/logs
 datadir=/home/karoy84/scratch/data
 export NCCL_BLOCKING_WAIT=1
 
-tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false & \
-    srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
+# tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false & \
+srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --batch_size 256 \
     --epoch 2 \
     --gpus_per_node 1 \
