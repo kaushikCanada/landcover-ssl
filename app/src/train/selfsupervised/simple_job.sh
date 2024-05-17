@@ -28,7 +28,7 @@ tensorboard --logdir=${logdir}/lightning_logs --host 0.0.0.0 --load_fast false &
 python ~/scratch/landcover-ssl/app/src/train/selfsupervised/train.py \
     --batch_size 180 \
     --epoch 20 \
-    --start_epoch 10
+    --start_epoch 10 \
     --gpus_per_node 1 \
     --number_of_nodes 1 \
     --num_workers 20 \
