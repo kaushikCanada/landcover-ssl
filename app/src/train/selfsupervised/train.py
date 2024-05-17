@@ -74,17 +74,10 @@ def parse_args():
     return args
 
 def checkpoint(model, filename):
-    # torch.save(model.state_dict(), filename)
-    torch.save({
-                    'optimizer': optimizer.state_dict(),
-                    'model': model.state_dict(),
-                }, filename)
+    torch.save(model.state_dict(), filename)
     
 def resume(model, filename):
-    # model.load_state_dict(torch.load(filename))
-    checkpoint = torch.load(filename)
-    model.load_state_dict(checkpoint['model'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
+    model.load_state_dict(torch.load(filename))
     
 def main(args):
     """Main function of the script."""
