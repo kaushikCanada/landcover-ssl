@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --nodes=1             
+#SBATCH --nodes=2             
 #SBATCH --gpus-per-node=4          # Request 2 GPU "generic resources”.
 #SBATCH --tasks-per-node=4   # Request 1 process per GPU. You will get 1 CPU per process by default. Request more CPUs with the "cpus-per-task" parameter to enable multiple data-loader workers to load data in parallel.
-#SBATCH --mem=64G
-#SBATCH --cpus-per-task=8      # CPU cores/threads
+#SBATCH --mem=80G
+#SBATCH --cpus-per-task=10      # CPU cores/threads
 #SBATCH --account=def-sh1352
-#SBATCH --time=0-03:00
+#SBATCH --time=0-05:00
 #SBATCH --output=%N-%j.out
 
 module load python/3.11 cuda cudnn gdal libspatialindex
@@ -43,8 +43,8 @@ echo "WORLD_SIZE="$WORLD_SIZE
 #             --data_dir  ${data_dir}
             
 srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/barlow_twins.py \
-            --batch_size 256 \
+            --batch_size 512 \
             --epochs 2 \
-            --workers 8 \
+            --workers 10 \
             --checkpoint_dir ${log_dir} \
             --data_dir  ${data_dir}
