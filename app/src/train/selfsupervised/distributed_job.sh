@@ -15,12 +15,6 @@ nvidia-smi
 
 source ~/royenv/bin/activate
 
-# srun --tasks-per-node=1 bash << EOF
-# virtualenv --no-download $SLURM_TMPDIR/env
-# source $SLURM_TMPDIR/env/bin/activate
-# pip install torchgeo tensorflow tensorboard --no-index
-# EOF
-
 log_dir=/home/karoy84/scratch/output
 data_dir=/home/karoy84/scratch/data
 
