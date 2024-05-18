@@ -84,7 +84,7 @@ def main():
 	args = parser.parse_args()
 	ngpus_per_node = torch.cuda.device_count()
 	dict_args = vars(args)
-
+	
 	cleaned_all_gta_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_gta_256m/"
 	cleaned_all_montreal_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_montreal_256m/"
 	cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
@@ -138,19 +138,15 @@ def main():
 	
 	print('From Rank: {}, ==> Preparing data..'.format(rank))
 
-	toronto_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_gta_256m_path
-                                                             ,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE)
-                                                             )
+	toronto_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_gta_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
 	print(len(toronto_unlabelled_dataset))
 	# print(toronto_unlabelled_dataset[0])
 	
-	montreal_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_montreal_256m_path
-							      ,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE)
-							      )
+	montreal_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_montreal_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
 	print(len(montreal_unlabelled_dataset))
 	# print(montreal_unlabelled_dataset[0])
  	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
-    	print(len(dataset))
+    print(len(dataset))
 	
 
 	mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
