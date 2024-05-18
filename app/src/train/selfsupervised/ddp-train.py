@@ -73,6 +73,7 @@ parser.add_argument('--dist-backend', default='nccl', type=str, help='')
 parser.add_argument('--world_size', default=1, type=int, help='')
 parser.add_argument('--init_method', default='tcp://127.0.0.1:3456', type=str, help='')
 parser.add_argument('--distributed', action='store_true', help='')
+parser.add_argument("--limit", type=int, default=5, help="no. of records to process")
 parser.add_argument("--resume_from_checkpoint",
                         help="Directory of pre-trained checkpoint including hyperparams,  \n"
                              "None --> Do not use pre-trained model. Training will start from random initialized model", default=None)
