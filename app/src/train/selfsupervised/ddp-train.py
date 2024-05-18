@@ -167,9 +167,9 @@ def main():
 	
 	for epoch in range(args.max_epochs):
 	
-	train_sampler.set_epoch(epoch)
-	
-	# train(epoch, net, criterion, optimizer, train_loader, rank)
+		train_sampler.set_epoch(epoch)
+		
+		# train(epoch, net, criterion, optimizer, train_loader, rank)
 
 def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 
