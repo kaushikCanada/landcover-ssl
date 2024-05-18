@@ -160,7 +160,7 @@ def main():
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 
 	optimizer = torch.optim.SGD(model.module.parameters(), lr=0.06)
-	criterion = BarlowTwinsLoss()
+	criterion = BarlowTwinsLoss().cuda()
 
 	# transform_train = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 	# dataset_train = CIFAR10(root='~/scratch/landcover-ssl/data', train=True, download=False, transform=transform_train)
@@ -173,41 +173,41 @@ def main():
 		np.random.seed(epoch)
 		random.seed(epoch)
 		mysampler.set_epoch(epoch)
-		# train(epoch, net, criterion, optimizer, train_loader, rank)
+		# train(epoch, net, criterion, optimizer, myloader, rank)
 	dist.destroy_process_group()
 
 def train(epoch, net, criterion, optimizer, train_loader, train_rank):
-
-    train_loss = 0
-    correct = 0
-    total = 0
-
-    epoch_start = time.time()
-
-    for batch_idx, (inputs, targets) in enumerate(train_loader):
-
-       start = time.time()
-
-       inputs = inputs.cuda()
-       targets = targets.cuda()
-       outputs = net(inputs)
-       loss = criterion(outputs, targets)
-
-       optimizer.zero_grad()
-       loss.backward()
-       optimizer.step()
-
-       train_loss += loss.item()
-       _, predicted = outputs.max(1)
-       total += targets.size(0)
-       correct += predicted.eq(targets).sum().item()
-       acc = 100 * correct / total
-
-       batch_time = time.time() - start
-
-       elapse_time = time.time() - epoch_start
-       elapse_time = datetime.timedelta(seconds=elapse_time)
-       print("From Rank: {}, Training time {}".format(train_rank, elapse_time))
+	net.train()
+	running_loss  = 0
+	
+	epoch_start = time.time()
+	
+	for i, batch in enumerate(train_loader, 0):
+		start = time.time()
+		new_batch = []
+			for image in batch['image']:
+				new_batch+=[image.cuda().squeeze(1)]
+			x0,x1 = new_batch
+			z0 = net(x0)
+			z1 = net(x1)
+			loss = criterion(z0, z1)
+			total_loss += loss.detach()
+			loss.backward()
+			optimizer.step()
+			optimizer.zero_grad()
+			running_loss  += loss.item()
+	        if i % 10 == 0:  # print every print_freq (10) mini-batches
+	            print(
+	                "Rank %d: [%d, %5d] loss: %.3f"
+	                % (train_rank, epoch + 1, i + 1, running_loss  / print_freq)
+	            )
+				running_loss  = 0.0
+				
+			batch_time = time.time() - start
+			elapse_time = time.time() - epoch_start
+			
+			elapse_time = datetime.timedelta(seconds=elapse_time)
+			print("From Rank: {}, Training time {}".format(train_rank, elapse_time))
 
 if __name__=='__main__':
    main()
