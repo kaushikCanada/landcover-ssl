@@ -173,7 +173,7 @@ def main():
 		np.random.seed(epoch)
 		random.seed(epoch)
 		mysampler.set_epoch(epoch)
-		# train(epoch, net, criterion, optimizer, myloader, rank)
+		train(epoch, model, criterion, optimizer, mydataloader, rank)
 	dist.destroy_process_group()
 
 def train(epoch, net, criterion, optimizer, train_loader, train_rank):
