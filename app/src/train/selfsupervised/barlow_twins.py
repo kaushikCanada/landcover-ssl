@@ -103,10 +103,6 @@ def main():
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 
 	optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
-	
-	# optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
-	# 	     weight_decay_filter=True,
-	# 	     lars_adaptation_filter=True)
 
 	# automatically resume from checkpoint if it exists
 	if (args.checkpoint_dir / 'checkpoint.pth').is_file():
@@ -166,7 +162,6 @@ def main():
 			y1,y2 = new_batch
 			y1 = y1.cuda(non_blocking=True)
 			y2 = y2.cuda(non_blocking=True)
-			adjust_learning_rate(args, optimizer, loader, step)
 			optimizer.zero_grad()
 			with torch.cuda.amp.autocast():
 				loss = model.forward(y1, y2)
@@ -190,22 +185,6 @@ def main():
 		   args.checkpoint_dir / 'resnet50.pth')
 
 	torch.distributed.destroy_process_group()
-
-def adjust_learning_rate(args, optimizer, loader, step):
-    max_steps = args.epochs * len(loader)
-    warmup_steps = 10 * len(loader)
-    base_lr = args.batch_size / 256
-    if step < warmup_steps:
-        lr = base_lr * step / warmup_steps
-    else:
-        step -= warmup_steps
-        max_steps -= warmup_steps
-        q = 0.5 * (1 + math.cos(math.pi * step / max_steps))
-        end_lr = base_lr * 0.001
-        lr = base_lr * q + end_lr * (1 - q)
-    optimizer.param_groups[0]['lr'] = lr * args.learning_rate_weights
-    optimizer.param_groups[1]['lr'] = lr * args.learning_rate_biases
-
 
 def handle_sigusr1(signum, frame):
     os.system(f'scontrol requeue {os.getenv("SLURM_JOB_ID")}')
