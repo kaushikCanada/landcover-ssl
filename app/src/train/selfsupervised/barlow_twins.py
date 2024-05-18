@@ -73,8 +73,8 @@ def main():
 	torch.cuda.set_device(current_device)
 	torch.backends.cudnn.benchmark = True
 	
-	args.rank += gpu
 	rank = int(os.environ.get("SLURM_NODEID"))*ngpus_per_node + local_rank
+	args.rank = rank
 	print('From Rank: {}, ==> Initializing Process Group...'.format(rank))
 	torch.distributed.init_process_group(
 		backend='nccl', init_method=args.dist_url,
