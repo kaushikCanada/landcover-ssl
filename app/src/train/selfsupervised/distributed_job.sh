@@ -13,12 +13,13 @@ module load python/3.11 cuda cudnn gdal libspatialindex
 echo "Hello World"
 nvidia-smi
 
+source ~/royenv/bin/activate
 
-srun --tasks-per-node=1 bash << EOF
-virtualenv --no-download $SLURM_TMPDIR/env
-source $SLURM_TMPDIR/env/bin/activate
-pip install torchgeo tensorflow tensorboard --no-index
-EOF
+# srun --tasks-per-node=1 bash << EOF
+# virtualenv --no-download $SLURM_TMPDIR/env
+# source $SLURM_TMPDIR/env/bin/activate
+# pip install torchgeo tensorflow tensorboard --no-index
+# EOF
 
 modeldir=/home/karoy84/scratch/output
 datadir=/home/karoy84/scratch/data
