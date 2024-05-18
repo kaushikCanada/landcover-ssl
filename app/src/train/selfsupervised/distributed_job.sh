@@ -31,20 +31,20 @@ echo "WORLD_SIZE="$WORLD_SIZE
 
 # The $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) variable tells the script how many processes are available for this execution. “srun” executes the script <tasks-per-node * nodes> times
 
-srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
-            --init_method tcp://$MASTER_ADDR:3456 \
-            --world_size $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) \
-            --batch_size 64 \
-            --start_epoch 0 \
-            --max_epochs 2 \
-            --num_workers 8 \
-            --limit 5 \
-            --log_dir ${log_dir} \
-            --data_dir  ${data_dir}
-            
 # srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
-#             --batch_size 512 \
-#             --epochs 2 \
-#             --workers 8 \
-#             --checkpoint_dir ${log_dir} \
+#             --init_method tcp://$MASTER_ADDR:3456 \
+#             --world_size $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) \
+#             --batch_size 64 \
+#             --start_epoch 0 \
+#             --max_epochs 2 \
+#             --num_workers 8 \
+#             --limit 5 \
+#             --log_dir ${log_dir} \
 #             --data_dir  ${data_dir}
+            
+srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/barlow_twins.py \
+            --batch_size 512 \
+            --epochs 2 \
+            --workers 8 \
+            --checkpoint_dir ${log_dir} \
+            --data_dir  ${data_dir}
