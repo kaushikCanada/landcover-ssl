@@ -53,6 +53,7 @@ parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
 def main():
 	args = parser.parse_args()
 	args.ngpus_per_node = torch.cuda.device_count()
+	dict_args = vars(args)
 	if 'SLURM_JOB_ID' in os.environ:
 		# single-node and multi-node distributed training on SLURM cluster
 		# requeue job on SLURM preemption
@@ -63,35 +64,33 @@ def main():
 		cmd = 'scontrol show hostnames ' + os.getenv('SLURM_JOB_NODELIST')
 		stdout = subprocess.check_output(cmd.split())
 		host_name = stdout.decode().splitlines()[0]
-		args.rank = int(os.getenv('SLURM_NODEID')) * args.ngpus_per_node
+		# args.rank = int(os.getenv('SLURM_NODEID')) * args.ngpus_per_node
 		args.world_size = int(os.getenv('SLURM_NNODES')) * args.ngpus_per_node
 		args.dist_url = f'tcp://{host_name}:39778'
-	else:
-		# single-node distributed training
-		args.rank = 0
-		args.dist_url = 'tcp://localhost:58472'
-		args.world_size = args.ngpus_per_node
-	# torch.multiprocessing.spawn(main_worker, (args,), args.ngpus_per_node)
-	main_worker(args.ngpus_per_node,args)
 
-
-
-def main_worker(gpu, args):
+	local_rank = int(os.environ.get("SLURM_LOCALID")) 
+	current_device = local_rank
+	torch.cuda.set_device(current_device)
+	torch.backends.cudnn.benchmark = True
+	
 	args.rank += gpu
+	rank = int(os.environ.get("SLURM_NODEID"))*ngpus_per_node + local_rank
+	print('From Rank: {}, ==> Initializing Process Group...'.format(rank))
 	torch.distributed.init_process_group(
 		backend='nccl', init_method=args.dist_url,
-		world_size=args.world_size, rank=args.rank)
+		world_size=args.world_size, rank=rank)
+	print("process group ready!")
 
+	print('From Rank: {}, ==> Loading checkpoint..'.format(rank))
 	if args.rank == 0:
 		args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 		stats_file = open(args.checkpoint_dir / 'stats.txt', 'a', buffering=1)
 		print(' '.join(sys.argv))
 		print(' '.join(sys.argv), file=stats_file)
 
-	torch.cuda.set_device(gpu)
-	torch.backends.cudnn.benchmark = True
-
-	model = BarlowTwins(args).cuda(gpu)
+	
+	print('From Rank: {}, ==> Loading model..'.format(rank))
+	model = BarlowTwins(args).cuda()
 	model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
 	param_weights = []
 	param_biases = []
@@ -101,7 +100,8 @@ def main_worker(gpu, args):
 		else:
 		    param_weights.append(param)
 	parameters = [{'params': param_weights}, {'params': param_biases}]
-	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
+	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
+	
 	optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
 		     weight_decay_filter=True,
 		     lars_adaptation_filter=True)
@@ -117,7 +117,8 @@ def main_worker(gpu, args):
 		start_epoch = 0
 
 	dict_args = vars(args)
-	
+
+	print('From Rank: {}, ==> Preparing data..'.format(rank))
 	cleaned_all_gta_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_gta_256m/"
 	cleaned_all_montreal_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_montreal_256m/"
 	cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
@@ -185,6 +186,7 @@ def main_worker(gpu, args):
 	# 	torch.save(model.module.backbone.state_dict(),
 	# 	   args.checkpoint_dir / 'resnet50.pth')
 
+	dist.destroy_process_group()
 
 def adjust_learning_rate(args, optimizer, loader, step):
     max_steps = args.epochs * len(loader)
