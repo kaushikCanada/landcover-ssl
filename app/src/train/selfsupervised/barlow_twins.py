@@ -75,58 +75,58 @@ def main():
 
 
 def main_worker(gpu, args):
-    args.rank += gpu
-    torch.distributed.init_process_group(
-        backend='nccl', init_method=args.dist_url,
-        world_size=args.world_size, rank=args.rank)
+	args.rank += gpu
+		torch.distributed.init_process_group(
+		backend='nccl', init_method=args.dist_url,
+		world_size=args.world_size, rank=args.rank)
 
-    if args.rank == 0:
-        args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
-        stats_file = open(args.checkpoint_dir / 'stats.txt', 'a', buffering=1)
-        print(' '.join(sys.argv))
-        print(' '.join(sys.argv), file=stats_file)
+	if args.rank == 0:
+		args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
+		stats_file = open(args.checkpoint_dir / 'stats.txt', 'a', buffering=1)
+		print(' '.join(sys.argv))
+		print(' '.join(sys.argv), file=stats_file)
 
-    torch.cuda.set_device(gpu)
-    torch.backends.cudnn.benchmark = True
+	torch.cuda.set_device(gpu)
+	torch.backends.cudnn.benchmark = True
 
-    model = BarlowTwins(args).cuda(gpu)
-    model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
-    param_weights = []
-    param_biases = []
-    for param in model.parameters():
-        if param.ndim == 1:
-            param_biases.append(param)
-        else:
-            param_weights.append(param)
-    parameters = [{'params': param_weights}, {'params': param_biases}]
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
-    optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
-                     weight_decay_filter=True,
-                     lars_adaptation_filter=True)
+	model = BarlowTwins(args).cuda(gpu)
+	model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
+	param_weights = []
+	param_biases = []
+	for param in model.parameters():
+		if param.ndim == 1:
+		    param_biases.append(param)
+		else:
+		    param_weights.append(param)
+	parameters = [{'params': param_weights}, {'params': param_biases}]
+	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
+	optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
+		     weight_decay_filter=True,
+		     lars_adaptation_filter=True)
 
-    # automatically resume from checkpoint if it exists
-    if (args.checkpoint_dir / 'checkpoint.pth').is_file():
-        ckpt = torch.load(args.checkpoint_dir / 'checkpoint.pth',
-                          map_location='cpu')
-        start_epoch = ckpt['epoch']
-        model.load_state_dict(ckpt['model'])
-        optimizer.load_state_dict(ckpt['optimizer'])
-    else:
-        start_epoch = 0
+	# automatically resume from checkpoint if it exists
+	if (args.checkpoint_dir / 'checkpoint.pth').is_file():
+		ckpt = torch.load(args.checkpoint_dir / 'checkpoint.pth',
+				  map_location='cpu')
+		start_epoch = ckpt['epoch']
+		model.load_state_dict(ckpt['model'])
+		optimizer.load_state_dict(ckpt['optimizer'])
+	else:
+		start_epoch = 0
 
-    dict_args = vars(args)
+	dict_args = vars(args)
 	
-    cleaned_all_gta_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_gta_256m/"
-    cleaned_all_montreal_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_montreal_256m/"
-    cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
-
-    toronto_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_gta_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
-    print(len(toronto_unlabelled_dataset))
-    # print(toronto_unlabelled_dataset[0])
-    
-    montreal_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_montreal_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
-    print(len(montreal_unlabelled_dataset))
-    # print(montreal_unlabelled_dataset[0])
+	cleaned_all_gta_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_gta_256m/"
+	cleaned_all_montreal_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_all_montreal_256m/"
+	cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
+	
+	toronto_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_gta_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
+	print(len(toronto_unlabelled_dataset))
+	# print(toronto_unlabelled_dataset[0])
+	
+	montreal_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_montreal_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
+	print(len(montreal_unlabelled_dataset))
+	# print(montreal_unlabelled_dataset[0])
 	
 	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
 	# print(len(dataset))
@@ -154,37 +154,37 @@ def main_worker(gpu, args):
 	for epoch in range(start_epoch, args.epochs):
 	sampler.set_epoch(epoch)
 	for step, (batch, _) in enumerate(loader, start=epoch * len(loader)):
-	    new_batch = []
-	    for image in batch['image']:
-	      new_batch+=[image.squeeze(1)]
-	    y1,y2 = new_batch
-	    y1 = y1.cuda(gpu, non_blocking=True)
-	    y2 = y2.cuda(gpu, non_blocking=True)
-	    adjust_learning_rate(args, optimizer, loader, step)
-	    optimizer.zero_grad()
-	    with torch.cuda.amp.autocast():
-		loss = model.forward(y1, y2)
-	    scaler.scale(loss).backward()
-	    scaler.step(optimizer)
-	    scaler.update()
-	    if step % args.print_freq == 0:
-		if args.rank == 0:
-		    stats = dict(epoch=epoch, step=step,
-				 lr_weights=optimizer.param_groups[0]['lr'],
-				 lr_biases=optimizer.param_groups[1]['lr'],
-				 loss=loss.item(),
-				 time=int(time.time() - start_time))
-		    print(json.dumps(stats))
-		    print(json.dumps(stats), file=stats_file)
+	new_batch = []
+	for image in batch['image']:
+	new_batch+=[image.squeeze(1)]
+	y1,y2 = new_batch
+	y1 = y1.cuda(gpu, non_blocking=True)
+	y2 = y2.cuda(gpu, non_blocking=True)
+	adjust_learning_rate(args, optimizer, loader, step)
+	optimizer.zero_grad()
+	with torch.cuda.amp.autocast():
+	loss = model.forward(y1, y2)
+	scaler.scale(loss).backward()
+	scaler.step(optimizer)
+	scaler.update()
+	if step % args.print_freq == 0:
 	if args.rank == 0:
-	    # save checkpoint
-	    state = dict(epoch=epoch + 1, model=model.state_dict(),
-			 optimizer=optimizer.state_dict())
-	    torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
+	    stats = dict(epoch=epoch, step=step,
+			 lr_weights=optimizer.param_groups[0]['lr'],
+			 lr_biases=optimizer.param_groups[1]['lr'],
+			 loss=loss.item(),
+			 time=int(time.time() - start_time))
+	    print(json.dumps(stats))
+	    print(json.dumps(stats), file=stats_file)
+	if args.rank == 0:
+	# save checkpoint
+	state = dict(epoch=epoch + 1, model=model.state_dict(),
+		 optimizer=optimizer.state_dict())
+	torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
 	if args.rank == 0:
 	# save final model
 	torch.save(model.module.backbone.state_dict(),
-		   args.checkpoint_dir / 'resnet50.pth')
+	   args.checkpoint_dir / 'resnet50.pth')
 
 
 def adjust_learning_rate(args, optimizer, loader, step):
