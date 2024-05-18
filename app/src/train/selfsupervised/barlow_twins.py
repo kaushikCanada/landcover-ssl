@@ -67,10 +67,10 @@ def main():
 		args.world_size = int(os.getenv('SLURM_NNODES')) * args.ngpus_per_node
 		args.dist_url = f'tcp://{host_name}:39778'
 	else:
-	# single-node distributed training
-	args.rank = 0
-	args.dist_url = 'tcp://localhost:58472'
-	args.world_size = args.ngpus_per_node
+		# single-node distributed training
+		args.rank = 0
+		args.dist_url = 'tcp://localhost:58472'
+		args.world_size = args.ngpus_per_node
 	# torch.multiprocessing.spawn(main_worker, (args,), args.ngpus_per_node)
 	main_worker(args.ngpus_per_node,args)
 
