@@ -78,6 +78,7 @@ parser.add_argument("--resume_from_checkpoint",
                              "None --> Do not use pre-trained model. Training will start from random initialized model", default=None)
 
 def main():
+	
 	print("Starting...")
 	
 	args = parser.parse_args()
@@ -150,6 +151,8 @@ def main():
 	# print(montreal_unlabelled_dataset[0])
  	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
     	print(len(dataset))
+	
+
 	mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
 	mydataloader = DataLoader(dataset, batch_size=dict_args['batch_size'], shuffle=(mysampler is None), num_workers=dict_args['num_workers'], sampler=mysampler)
 
