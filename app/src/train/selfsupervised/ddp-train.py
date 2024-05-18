@@ -145,15 +145,14 @@ def main():
 	print(len(montreal_unlabelled_dataset))
 	# print(montreal_unlabelled_dataset[0])
 	
- 	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
+	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
 	# print(len(dataset))
-	
-	
+		
 	mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
 	mydataloader = DataLoader(dataset, batch_size=dict_args['batch_size'], shuffle=(mysampler is None), num_workers=dict_args['num_workers'], sampler=mysampler)
 
 	print(len(mydataloader))
-    model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
+	model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
 	print(model)
 
 	transform_train = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
