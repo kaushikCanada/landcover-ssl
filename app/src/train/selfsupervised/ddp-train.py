@@ -178,7 +178,7 @@ def main():
 
 def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 	net.train()
-	running_loss  = 0
+	running_loss  = 0.0
 	
 	epoch_start = time.time()
 	
@@ -197,11 +197,11 @@ def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 		optimizer.zero_grad()
 		running_loss  += loss.item()
 	        if i % 10 == 0:  # print every print_freq (10) mini-batches
-	            print(
-	                "Rank %d: [%d, %5d] loss: %.3f"
-	                % (train_rank, epoch + 1, i + 1, running_loss  / print_freq)
-	            )
-				running_loss  = 0.0
+			print(
+			"Rank %d: [%d, %5d] loss: %.3f"
+			% (train_rank, epoch + 1, i + 1, running_loss  / print_freq)
+			)
+			running_loss  = 0.0
 				
 		batch_time = time.time() - start
 		elapse_time = time.time() - epoch_start
