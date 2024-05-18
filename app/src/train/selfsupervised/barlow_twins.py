@@ -148,7 +148,7 @@ def main():
 		random.seed(epoch)
 		sampler.set_epoch(epoch)
 		epoch_start = time.time()
-		print("From Rank: {}, EPOCH STARTED ---------------- {}".format(rank, datetime.timedelta(seconds=(epoch_start-start_time))))
+		print("From Rank: {}, EPOCH STARTED DATA LOADING---------------- {}".format(rank, datetime.timedelta(seconds=(epoch_start-start_time))))
 		for step, batch in enumerate(loader, start=epoch * len(loader)):
 			start = time.time()
 			print("From Rank: {}, BATCH {} STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(start-epoch_start))))
@@ -173,7 +173,7 @@ def main():
 			
 			# elapse_time = datetime.timedelta(seconds=elapse_time)
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
-		print("From Rank: {}, EPOCH FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
+		print("From Rank: {}, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
 	print("From Rank: {}, TRAINING FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-start_time))))
 		# if args.rank == 0:
 		# 	# save checkpoint
