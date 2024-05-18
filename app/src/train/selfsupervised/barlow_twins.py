@@ -145,7 +145,7 @@ def main():
 	#     pin_memory=True, sampler=sampler)
 	
 	sampler = torch.utils.data.distributed.DistributedSampler(dataset)
-	loader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=sampler)
+	loader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(sampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=sampler)
 	
 	print(len(loader))
 	
