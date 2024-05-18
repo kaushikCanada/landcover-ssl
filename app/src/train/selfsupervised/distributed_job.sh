@@ -35,7 +35,8 @@ srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
             --init_method tcp://$MASTER_ADDR:3456 \
             --world_size $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) \
             --batch_size 256 \
-            --start_epoch 10 \
+            --start_epoch 0 \
+            --max_epochs 2 \
             --num_workers 8 \
             --limit 5 \
             --log_dir ${log_dir} \
