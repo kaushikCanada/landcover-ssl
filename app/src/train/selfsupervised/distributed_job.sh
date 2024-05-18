@@ -21,8 +21,8 @@ source ~/royenv/bin/activate
 # pip install torchgeo tensorflow tensorboard --no-index
 # EOF
 
-modeldir=/home/karoy84/scratch/output
-datadir=/home/karoy84/scratch/data
+log_dir=/home/karoy84/scratch/output
+data_dir=/home/karoy84/scratch/data
 
 export TORCH_NCCL_BLOCKING_WAIT=1
 master_addr=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
@@ -41,5 +41,5 @@ srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
             --init_method tcp://$MASTER_ADDR:3456 \
             --world_size $((SLURM_NTASKS_PER_NODE * SLURM_JOB_NUM_NODES)) \
             --batch_size 256 \
-            --modeldir ${modeldir} \
-            --data_dir  ${datadir}
+            --log_dir ${log_dir} \
+            --data_dir  ${data_dir}
