@@ -1,0 +1,342 @@
+Hello World
+Sat May 18 17:32:36 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-SXM2-16GB           Off |   00000000:1A:00.0 Off |                    0 |
+| N/A   36C    P0             40W /  300W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  Tesla V100-SXM2-16GB           Off |   00000000:1C:00.0 Off |                    0 |
+| N/A   34C    P0             38W /  300W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  Tesla V100-SXM2-16GB           Off |   00000000:1D:00.0 Off |                    0 |
+| N/A   34C    P0             38W /  300W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  Tesla V100-SXM2-16GB           Off |   00000000:1E:00.0 Off |                    0 |
+| N/A   37C    P0             39W /  300W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+MASTER_ADDR=bg11207
+r0 master: bg11207
+r0 Launching python script
+WORLD_SIZE=16
+From Rank: 9, ==> Initializing Process Group...
+process group ready!
+From Rank: 9, ==> Loading checkpoint..
+From Rank: 9, ==> Loading model..
+From Rank: 9, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 9, EPOCH STARTED DATA LOADING---------------- 0:00:00.002186
+From Rank: 11, ==> Initializing Process Group...
+process group ready!
+From Rank: 11, ==> Loading checkpoint..
+From Rank: 11, ==> Loading model..
+From Rank: 11, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 11, EPOCH STARTED DATA LOADING---------------- 0:00:00.000343
+From Rank: 8, ==> Initializing Process Group...
+process group ready!
+From Rank: 8, ==> Loading checkpoint..
+From Rank: 8, ==> Loading model..
+From Rank: 8, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 8, EPOCH STARTED DATA LOADING---------------- 0:00:00.001071
+From Rank: 2, ==> Initializing Process Group...
+process group ready!
+From Rank: 2, ==> Loading checkpoint..
+From Rank: 2, ==> Loading model..
+From Rank: 2, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 2, EPOCH STARTED DATA LOADING---------------- 0:00:00.001912
+From Rank: 14, ==> Initializing Process Group...
+process group ready!
+From Rank: 14, ==> Loading checkpoint..
+From Rank: 14, ==> Loading model..
+From Rank: 14, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 14, EPOCH STARTED DATA LOADING---------------- 0:00:00.001230
+From Rank: 15, ==> Initializing Process Group...
+process group ready!
+From Rank: 15, ==> Loading checkpoint..
+From Rank: 15, ==> Loading model..
+From Rank: 15, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 15, EPOCH STARTED DATA LOADING---------------- 0:00:00.000243
+From Rank: 12, ==> Initializing Process Group...
+process group ready!
+From Rank: 12, ==> Loading checkpoint..
+From Rank: 12, ==> Loading model..
+From Rank: 12, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 12, EPOCH STARTED DATA LOADING---------------- 0:00:00.000433
+From Rank: 0, ==> Initializing Process Group...
+process group ready!
+From Rank: 0, ==> Loading checkpoint..
+/home/karoy84/scratch/landcover-ssl/app/src/train/selfsupervised/barlow_twins.py --batch_size 1024 --epochs 2 --workers 10 --checkpoint_dir /home/karoy84/scratch/output --data_dir /h/scratch/data
+From Rank: 0, ==> Loading model..
+From Rank: 0, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 0, EPOCH STARTED DATA LOADING---------------- 0:00:00.000260
+From Rank: 1, ==> Initializing Process Group...
+process group ready!
+From Rank: 1, ==> Loading checkpoint..
+From Rank: 1, ==> Loading model..
+From Rank: 1, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 1, EPOCH STARTED DATA LOADING---------------- 0:00:00.000805
+From Rank: 4, ==> Initializing Process Group...
+process group ready!
+From Rank: 4, ==> Loading checkpoint..
+From Rank: 4, ==> Loading model..
+From Rank: 4, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 4, EPOCH STARTED DATA LOADING---------------- 0:00:00.000150
+From Rank: 5, ==> Initializing Process Group...
+process group ready!
+From Rank: 5, ==> Loading checkpoint..
+From Rank: 5, ==> Loading model..
+From Rank: 5, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 5, EPOCH STARTED DATA LOADING---------------- 0:00:00.000345
+From Rank: 7, ==> Initializing Process Group...
+process group ready!
+From Rank: 7, ==> Loading checkpoint..
+From Rank: 7, ==> Loading model..
+From Rank: 7, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 7, EPOCH STARTED DATA LOADING---------------- 0:00:00.001095
+From Rank: 6, ==> Initializing Process Group...
+process group ready!
+From Rank: 6, ==> Loading checkpoint..
+From Rank: 6, ==> Loading model..
+From Rank: 6, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 6, EPOCH STARTED DATA LOADING---------------- 0:00:00.000427
+From Rank: 10, ==> Initializing Process Group...
+process group ready!
+From Rank: 10, ==> Loading checkpoint..
+From Rank: 10, ==> Loading model..
+From Rank: 10, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 10, EPOCH STARTED DATA LOADING---------------- 0:00:00.000442
+From Rank: 3, ==> Initializing Process Group...
+process group ready!
+From Rank: 3, ==> Loading checkpoint..
+From Rank: 3, ==> Loading model..
+From Rank: 3, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 3, EPOCH STARTED DATA LOADING---------------- 0:00:00.000224
+From Rank: 13, ==> Initializing Process Group...
+process group ready!
+From Rank: 13, ==> Loading checkpoint..
+From Rank: 13, ==> Loading model..
+From Rank: 13, ==> Preparing data..
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/msi/000000000051.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/ndvi/000000000051.tif', 'ndwi': '84/scratch/data/AZURE/cleaned_all_gta_256m/ndwi/000000000051.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_gta_256m/pisi/000000000051.tif'}
+----
+44986
+{'msi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/msi/000000000017.tif', 'ndvi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndvi/000000000017.tif',home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/ndwi/000000000017.tif', 'pisi': '/home/karoy84/scratch/data/AZURE/cleaned_all_montreal_256m/pisi/000000000017.tif'}
+----
+38159
+82
+From Rank: 13, EPOCH STARTED DATA LOADING---------------- 0:00:00.000430
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/karoy84/royenv/lib/python3.11/site-packages/torch/autograd/graph.py:744: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are ackprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, re you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, orthis warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /home/coulombc/wheels_builder/tmpn-3.11/torch/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+From Rank: 15, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.188366
+From Rank: 15, EPOCH STARTED DATA LOADING---------------- 0:11:53.188808
+From Rank: 0, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.243362
+From Rank: 0, EPOCH STARTED DATA LOADING---------------- 0:11:53.248926
+From Rank: 14, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.207513
+From Rank: 14, EPOCH STARTED DATA LOADING---------------- 0:11:53.208935
+From Rank: 6, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.164757
+From Rank: 6, EPOCH STARTED DATA LOADING---------------- 0:11:53.165339
+From Rank: 8, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.527842
+From Rank: 8, EPOCH STARTED DATA LOADING---------------- 0:11:53.531713
+From Rank: 2, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.253196
+From Rank: 2, EPOCH STARTED DATA LOADING---------------- 0:11:53.255938
+From Rank: 13, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.167068
+From Rank: 13, EPOCH STARTED DATA LOADING---------------- 0:11:53.167786
+From Rank: 7, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.177553
+From Rank: 7, EPOCH STARTED DATA LOADING---------------- 0:11:53.178824
+From Rank: 9, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.537704
+From Rank: 9, EPOCH STARTED DATA LOADING---------------- 0:11:53.540204
+From Rank: 3, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.217268
+From Rank: 3, EPOCH STARTED DATA LOADING---------------- 0:11:53.217721
+From Rank: 12, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.208148
+From Rank: 12, EPOCH STARTED DATA LOADING---------------- 0:11:53.208744
+From Rank: 4, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.200443
+From Rank: 4, EPOCH STARTED DATA LOADING---------------- 0:11:53.200777
+From Rank: 11, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.536862
+From Rank: 11, EPOCH STARTED DATA LOADING---------------- 0:11:53.537403
+From Rank: 1, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.257504
+From Rank: 1, EPOCH STARTED DATA LOADING---------------- 0:11:53.258525
+From Rank: 5, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.201782
+From Rank: 5, EPOCH STARTED DATA LOADING---------------- 0:11:53.202437
+From Rank: 10, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:11:53.282071
+From Rank: 10, EPOCH STARTED DATA LOADING---------------- 0:11:53.282715
+From Rank: 12, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.220747
+From Rank: 12, TRAINING FINISHED ---------------- 0:20:04.429538
+From Rank: 4, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.221742
+From Rank: 4, TRAINING FINISHED ---------------- 0:20:04.422584
+From Rank: 0, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.307408
+From Rank: 0, TRAINING FINISHED ---------------- 0:20:04.556411
+From Rank: 6, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.255991
+From Rank: 6, TRAINING FINISHED ---------------- 0:20:04.421373
+From Rank: 5, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.216056
+From Rank: 5, TRAINING FINISHED ---------------- 0:20:04.418543
+From Rank: 8, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.287598
+From Rank: 8, TRAINING FINISHED ---------------- 0:20:04.819357
+From Rank: 7, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.197422
+From Rank: 7, TRAINING FINISHED ---------------- 0:20:04.376293
+From Rank: 10, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.321257
+From Rank: 10, TRAINING FINISHED ---------------- 0:20:04.604019
+From Rank: 11, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.305720
+From Rank: 11, TRAINING FINISHED ---------------- 0:20:04.843177
+From Rank: 9, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.312030
+From Rank: 9, TRAINING FINISHED ---------------- 0:20:04.852292
+From Rank: 14, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.224485
+From Rank: 14, TRAINING FINISHED ---------------- 0:20:04.433477
+From Rank: 13, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.257991
+From Rank: 13, TRAINING FINISHED ---------------- 0:20:04.425824
+From Rank: 15, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.272130
+From Rank: 15, TRAINING FINISHED ---------------- 0:20:04.460990
+From Rank: 1, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.312917
+From Rank: 1, TRAINING FINISHED ---------------- 0:20:04.571515
+From Rank: 2, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.308419
+From Rank: 2, TRAINING FINISHED ---------------- 0:20:04.564421
+From Rank: 3, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- 0:08:11.321951
+From Rank: 3, TRAINING FINISHED ---------------- 0:20:04.539745
