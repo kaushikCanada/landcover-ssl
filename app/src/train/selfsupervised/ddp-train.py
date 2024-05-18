@@ -160,7 +160,7 @@ def main():
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 
 	optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
-	criterion = BarlowTwinsLoss()
+	criterion = BarlowTwinsLoss(gather_distributed=True)
 
 	# transform_train = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 	# dataset_train = CIFAR10(root='~/scratch/landcover-ssl/data', train=True, download=False, transform=transform_train)
