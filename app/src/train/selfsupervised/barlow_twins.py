@@ -173,6 +173,8 @@ def main():
 			
 			# elapse_time = datetime.timedelta(seconds=elapse_time)
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
+		print("From Rank: {}, EPOCH FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
+	print("From Rank: {}, TRAINING FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-start_time))))
 		# if args.rank == 0:
 		# 	# save checkpoint
 		# 	state = dict(epoch=epoch + 1, model=model.state_dict(),
