@@ -65,7 +65,7 @@ def main():
         host_name = stdout.decode().splitlines()[0]
         args.rank = int(os.getenv('SLURM_NODEID')) * args.ngpus_per_node
         args.world_size = int(os.getenv('SLURM_NNODES')) * args.ngpus_per_node
-        args.dist_url = f'tcp://{host_name}:58472'
+        args.dist_url = f'tcp://{host_name}:3456'
     else:
         # single-node distributed training
         args.rank = 0
