@@ -143,14 +143,15 @@ def main():
 	start_time = time.time()
 	scaler = torch.cuda.amp.GradScaler()
 	for epoch in range(start_epoch, args.epochs):
-		print("From Rank: {}, EPOCH STARTED ---------------- {}".format(rank, datetime.timedelta(seconds=start_time)))
+		
 		np.random.seed(epoch)
 		random.seed(epoch)
 		sampler.set_epoch(epoch)
 		epoch_start = time.time()
+		print("From Rank: {}, EPOCH STARTED ---------------- {}".format(rank, datetime.timedelta(seconds=(epoch_start-start_time))))
 		for step, batch in enumerate(loader, start=epoch * len(loader)):
 			start = time.time()
-			print("From Rank: {}, BATCH {} STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=start)))
+			print("From Rank: {}, BATCH {} STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(start-epoch_start))))
 			new_batch = []
 			for image in batch['image']:
 				new_batch+=[image.squeeze(1)]
@@ -159,11 +160,11 @@ def main():
 			y2 = y2.cuda(non_blocking=True)
 			optimizer.zero_grad()
 			with torch.cuda.amp.autocast():
-				print("From Rank: {}, BATCH {} LOSS FORWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=time.time())))
+				print("From Rank: {}, BATCH {} LOSS FORWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 				loss = model.forward(y1, y2)
-			print("From Rank: {}, BATCH {} LOSS BACKWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=time.time())))
+			print("From Rank: {}, BATCH {} LOSS BACKWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.scale(loss).backward()
-			print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=time.time())))
+			print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.step(optimizer)
 			scaler.update()
 			
