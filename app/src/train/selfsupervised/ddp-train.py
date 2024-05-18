@@ -185,17 +185,17 @@ def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 	for i, batch in enumerate(train_loader, 0):
 		start = time.time()
 		new_batch = []
-			for image in batch['image']:
-				new_batch+=[image.cuda().squeeze(1)]
-			x0,x1 = new_batch
-			z0 = net(x0)
-			z1 = net(x1)
-			loss = criterion(z0, z1)
-			total_loss += loss.detach()
-			loss.backward()
-			optimizer.step()
-			optimizer.zero_grad()
-			running_loss  += loss.item()
+		for image in batch['image']:
+			new_batch+=[image.cuda().squeeze(1)]
+		x0,x1 = new_batch
+		z0 = net(x0)
+		z1 = net(x1)
+		loss = criterion(z0, z1)
+		total_loss += loss.detach()
+		loss.backward()
+		optimizer.step()
+		optimizer.zero_grad()
+		running_loss  += loss.item()
 	        if i % 10 == 0:  # print every print_freq (10) mini-batches
 	            print(
 	                "Rank %d: [%d, %5d] loss: %.3f"
@@ -203,11 +203,11 @@ def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 	            )
 				running_loss  = 0.0
 				
-			batch_time = time.time() - start
-			elapse_time = time.time() - epoch_start
-			
-			elapse_time = datetime.timedelta(seconds=elapse_time)
-			print("From Rank: {}, Training time {}".format(train_rank, elapse_time))
+		batch_time = time.time() - start
+		elapse_time = time.time() - epoch_start
+		
+		elapse_time = datetime.timedelta(seconds=elapse_time)
+		print("From Rank: {}, Training time {}".format(train_rank, elapse_time))
 
 if __name__=='__main__':
    main()
