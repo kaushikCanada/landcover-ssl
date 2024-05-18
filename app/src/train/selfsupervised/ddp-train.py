@@ -2,6 +2,7 @@ import os
 import time
 import datetime
 import math
+import random
 from torchgeo.trainers import BaseTask
 import argparse
 import tempfile
