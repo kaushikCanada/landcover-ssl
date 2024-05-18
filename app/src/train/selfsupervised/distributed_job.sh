@@ -41,3 +41,10 @@ srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
             --limit 5 \
             --log_dir ${log_dir} \
             --data_dir  ${data_dir}
+            
+# srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/ddp-train.py \
+#             --batch_size 512 \
+#             --epochs 2 \
+#             --workers 8 \
+#             --checkpoint_dir ${log_dir} \
+#             --data_dir  ${data_dir}
