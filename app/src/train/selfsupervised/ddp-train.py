@@ -192,7 +192,7 @@ def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 		z1 = net(x1)
 		loss = criterion(z0, z1)
 		running_loss += loss.detach()
-		loss.backward()
+		loss.backward(retain_graph=True)
 		optimizer.step()
 		optimizer.zero_grad()
 		running_loss  += loss.item()
