@@ -111,30 +111,30 @@ def main():
 	
 	print('From Rank: {}, ==> Making model..'.format(rank))
 	
-	class Net(nn.Module):
-		def __init__(self):
-		  super(Net, self).__init__()
+	# class Net(nn.Module):
+	# 	def __init__(self):
+	# 	  super(Net, self).__init__()
 		
-		  self.conv1 = nn.Conv2d(3, 6, 5)
-		  self.pool = nn.MaxPool2d(2, 2)
-		  self.conv2 = nn.Conv2d(6, 16, 5)
-		  self.fc1 = nn.Linear(16 * 5 * 5, 120)
-		  self.fc2 = nn.Linear(120, 84)
-		  self.fc3 = nn.Linear(84, 10)
+	# 	  self.conv1 = nn.Conv2d(3, 6, 5)
+	# 	  self.pool = nn.MaxPool2d(2, 2)
+	# 	  self.conv2 = nn.Conv2d(6, 16, 5)
+	# 	  self.fc1 = nn.Linear(16 * 5 * 5, 120)
+	# 	  self.fc2 = nn.Linear(120, 84)
+	# 	  self.fc3 = nn.Linear(84, 10)
 		
-		def forward(self, x):
-		  x = self.pool(F.relu(self.conv1(x)))
-		  x = self.pool(F.relu(self.conv2(x)))
-		  x = x.view(-1, 16 * 5 * 5)
-		  x = F.relu(self.fc1(x))
-		  x = F.relu(self.fc2(x))
-		  x = self.fc3(x)
-		  return x
+	# 	def forward(self, x):
+	# 	  x = self.pool(F.relu(self.conv1(x)))
+	# 	  x = self.pool(F.relu(self.conv2(x)))
+	# 	  x = x.view(-1, 16 * 5 * 5)
+	# 	  x = F.relu(self.fc1(x))
+	# 	  x = F.relu(self.fc2(x))
+	# 	  x = self.fc3(x)
+	# 	  return x
 	
-	net = Net()
+	# net = Net()
 	
-	net.cuda()
-	net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[current_device])
+	# net.cuda()
+	# net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[current_device])
 	
 	print('From Rank: {}, ==> Preparing data..'.format(rank))
 
@@ -150,27 +150,30 @@ def main():
 	# print(len(dataset))
 		
 	mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
-	mydataloader = DataLoader(dataset, batch_size=dict_args['batch_size'], shuffle=(mysampler is None), num_workers=dict_args['num_workers'], sampler=mysampler)
+	mydataloader = DataLoader(dataset, batch_size=dict_args['batch_size'], shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['num_workers'], sampler=mysampler)
 
 	print(len(mydataloader))
 	model = BarlowTwinsTask(model='resnet18',in_channels=11, batch_size = dict['batch_size'])
 	print(model)
+	model.cuda()
+	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 
-	transform_train = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+	optimizer = torch.optim.SGD(model.module.parameters(), lr=0.06)
+    	criterion = BarlowTwinsLoss()
+
+	# transform_train = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+	# dataset_train = CIFAR10(root='~/scratch/landcover-ssl/data', train=True, download=False, transform=transform_train)
+	# train_sampler = torch.utils.data.distributed.DistributedSampler(dataset_train)
+	# train_loader = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=(train_sampler is None), num_workers=args.num_workers, sampler=train_sampler)
+	# criterion = nn.CrossEntropyLoss().cuda()
+	# optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4)
 	
-	dataset_train = CIFAR10(root='~/scratch/landcover-ssl/data', train=True, download=False, transform=transform_train)
-	
-	train_sampler = torch.utils.data.distributed.DistributedSampler(dataset_train)
-	train_loader = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=(train_sampler is None), num_workers=args.num_workers, sampler=train_sampler)
-	
-	criterion = nn.CrossEntropyLoss().cuda()
-	optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4)
-	
-	for epoch in range(args.max_epochs):
-	
+	for epoch in range(dict_args['start_epoch'],dict_args['max_epochs']):
+		np.random.seed(epoch)
+        	random.seed(epoch)
 		train_sampler.set_epoch(epoch)
-		
 		# train(epoch, net, criterion, optimizer, train_loader, rank)
+	dist.destroy_process_group()
 
 def train(epoch, net, criterion, optimizer, train_loader, train_rank):
 
