@@ -160,8 +160,8 @@ def main():
 			for image in batch['image']:
 				new_batch+=[image.squeeze(1)]
 			y1,y2 = new_batch
-			y1 = y1.cuda(gpu, non_blocking=True)
-			y2 = y2.cuda(gpu, non_blocking=True)
+			y1 = y1.cuda(non_blocking=True)
+			y2 = y2.cuda(non_blocking=True)
 			adjust_learning_rate(args, optimizer, loader, step)
 			optimizer.zero_grad()
 			with torch.cuda.amp.autocast():
