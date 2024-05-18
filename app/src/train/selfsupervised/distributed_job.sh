@@ -17,7 +17,7 @@ nvidia-smi
 srun --tasks-per-node=1 bash << EOF
 virtualenv --no-download $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
-pip install torchgeo --no-index
+pip install torchgeo tensorflow tensorboard --no-index
 EOF
 
 modeldir=/home/karoy84/scratch/output
