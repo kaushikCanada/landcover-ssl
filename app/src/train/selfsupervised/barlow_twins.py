@@ -131,17 +131,10 @@ def main():
 	
 	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
 	# print(len(dataset))
-	
-	# dataset = torchvision.datasets.ImageFolder(args.data / 'train', Transform())
-	# sampler = torch.utils.data.distributed.DistributedSampler(dataset)
-	
+
 	assert args.batch_size % args.world_size == 0
 	per_device_batch_size = args.batch_size // args.world_size
-	
-	# loader = torch.utils.data.DataLoader(
-	#     dataset, batch_size=per_device_batch_size, num_workers=args.workers,
-	#     pin_memory=True, sampler=sampler)
-	
+		
 	sampler = torch.utils.data.distributed.DistributedSampler(dataset)
 	loader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(sampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=sampler)
 	
@@ -247,48 +240,6 @@ class BarlowTwins(nn.Module):
         off_diag = off_diagonal(c).pow_(2).sum()
         loss = on_diag + self.args.lambd * off_diag
         return loss
-
-
-class LARS(optim.Optimizer):
-    def __init__(self, params, lr, weight_decay=0, momentum=0.9, eta=0.001,
-                 weight_decay_filter=False, lars_adaptation_filter=False):
-        defaults = dict(lr=lr, weight_decay=weight_decay, momentum=momentum,
-                        eta=eta, weight_decay_filter=weight_decay_filter,
-                        lars_adaptation_filter=lars_adaptation_filter)
-        super().__init__(params, defaults)
-
-
-    def exclude_bias_and_norm(self, p):
-        return p.ndim == 1
-
-    @torch.no_grad()
-    def step(self):
-        for g in self.param_groups:
-            for p in g['params']:
-                dp = p.grad
-
-                if dp is None:
-                    continue
-
-                if not g['weight_decay_filter'] or not self.exclude_bias_and_norm(p):
-                    dp = dp.add(p, alpha=g['weight_decay'])
-
-                if not g['lars_adaptation_filter'] or not self.exclude_bias_and_norm(p):
-                    param_norm = torch.norm(p)
-                    update_norm = torch.norm(dp)
-                    one = torch.ones_like(param_norm)
-                    q = torch.where(param_norm > 0.,
-                                    torch.where(update_norm > 0,
-                                                (g['eta'] * param_norm / update_norm), one), one)
-                    dp = dp.mul(q)
-
-                param_state = self.state[p]
-                if 'mu' not in param_state:
-                    param_state['mu'] = torch.zeros_like(p)
-                mu = param_state['mu']
-                mu.mul_(g['momentum']).add_(dp)
-
-                p.add_(mu, alpha=-g['lr'])
 
 
 if __name__ == '__main__':
