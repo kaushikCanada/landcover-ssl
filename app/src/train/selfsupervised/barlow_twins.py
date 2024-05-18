@@ -150,12 +150,14 @@ def main():
 	start_time = time.time()
 	scaler = torch.cuda.amp.GradScaler()
 	for epoch in range(start_epoch, args.epochs):
+		print("From Rank: {}, EPOCH STARTED ---------------- {}".format(rank, start_time))
 		np.random.seed(epoch)
 		random.seed(epoch)
 		sampler.set_epoch(epoch)
 		epoch_start = time.time()
 		for step, batch in enumerate(loader, start=epoch * len(loader)):
 			start = time.time()
+			print("From Rank: {}, BATCH {} STARTED ---------------- {}".format(rank, step, start))
 			new_batch = []
 			for image in batch['image']:
 				new_batch+=[image.squeeze(1)]
@@ -164,8 +166,11 @@ def main():
 			y2 = y2.cuda(non_blocking=True)
 			optimizer.zero_grad()
 			with torch.cuda.amp.autocast():
+				print("From Rank: {}, BATCH {} LOSS FORWARD STARTED ---------------- {}".format(rank, step, time.time()))
 				loss = model.forward(y1, y2)
+			print("From Rank: {}, BATCH {} LOSS BACKWARD STARTED ---------------- {}".format(rank, step, time.time()))
 			scaler.scale(loss).backward()
+			print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, time.time()))
 			scaler.step(optimizer)
 			scaler.update()
 			
@@ -174,15 +179,15 @@ def main():
 			
 			elapse_time = datetime.timedelta(seconds=elapse_time)
 			print("From Rank: {}, Training time {}".format(rank, elapse_time))
-		if args.rank == 0:
-			# save checkpoint
-			state = dict(epoch=epoch + 1, model=model.state_dict(),
-				 optimizer=optimizer.state_dict())
-			torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
-	if args.rank == 0:
-		# save final model
-		torch.save(model.module.backbone.state_dict(),
-		   args.checkpoint_dir / 'resnet50.pth')
+		# if args.rank == 0:
+		# 	# save checkpoint
+		# 	state = dict(epoch=epoch + 1, model=model.state_dict(),
+		# 		 optimizer=optimizer.state_dict())
+		# 	torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
+	# if args.rank == 0:
+	# 	# save final model
+	# 	torch.save(model.module.backbone.state_dict(),
+	# 	   args.checkpoint_dir / 'resnet50.pth')
 
 	torch.distributed.destroy_process_group()
 
