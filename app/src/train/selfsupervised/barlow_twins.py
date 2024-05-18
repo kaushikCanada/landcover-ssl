@@ -42,7 +42,7 @@ parser.add_argument('--weight-decay', default=1e-6, type=float, metavar='W',
                     help='weight decay')
 parser.add_argument('--lambd', default=0.0051, type=float, metavar='L',
                     help='weight on off-diagonal terms')
-parser.add_argument('--projector', default='8192-8192-8192', type=str,
+parser.add_argument('--projector', default='2048-2048-2048', type=str,
                     metavar='MLP', help='projector MLP')
 parser.add_argument('--print-freq', default=100, type=int, metavar='N',
                     help='print frequency')
@@ -101,10 +101,12 @@ def main():
 		    param_weights.append(param)
 	parameters = [{'params': param_weights}, {'params': param_biases}]
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
+
+	optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
 	
-	optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
-		     weight_decay_filter=True,
-		     lars_adaptation_filter=True)
+	# optimizer = LARS(parameters, lr=0, weight_decay=args.weight_decay,
+	# 	     weight_decay_filter=True,
+	# 	     lars_adaptation_filter=True)
 
 	# automatically resume from checkpoint if it exists
 	if (args.checkpoint_dir / 'checkpoint.pth').is_file():
@@ -155,7 +157,9 @@ def main():
 		np.random.seed(epoch)
 		random.seed(epoch)
 		sampler.set_epoch(epoch)
+		epoch_start = time.time()
 		for step, batch in enumerate(loader, start=epoch * len(loader)):
+			start = time.time()
 			new_batch = []
 			for image in batch['image']:
 				new_batch+=[image.squeeze(1)]
@@ -169,15 +173,12 @@ def main():
 			scaler.scale(loss).backward()
 			scaler.step(optimizer)
 			scaler.update()
-			if step % args.print_freq == 0:
-				if args.rank == 0:
-					    stats = dict(epoch=epoch, step=step,
-							 lr_weights=optimizer.param_groups[0]['lr'],
-							 lr_biases=optimizer.param_groups[1]['lr'],
-							 loss=loss.item(),
-							 time=int(time.time() - start_time))
-					    print(json.dumps(stats))
-					    print(json.dumps(stats), file=stats_file)
+			
+			batch_time = time.time() - start
+			elapse_time = time.time() - epoch_start
+			
+			elapse_time = datetime.timedelta(seconds=elapse_time)
+			print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		if args.rank == 0:
 			# save checkpoint
 			state = dict(epoch=epoch + 1, model=model.state_dict(),
