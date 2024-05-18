@@ -170,7 +170,7 @@ def main():
 	
 	for epoch in range(dict_args['start_epoch'],dict_args['max_epochs']):
 		np.random.seed(epoch)
-        	random.seed(epoch)
+		random.seed(epoch)
 		train_sampler.set_epoch(epoch)
 		# train(epoch, net, criterion, optimizer, train_loader, rank)
 	dist.destroy_process_group()
