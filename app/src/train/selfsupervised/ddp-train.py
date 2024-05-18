@@ -1,21 +1,64 @@
 import os
 import time
 import datetime
-
+import math
+from torchgeo.trainers import BaseTask
+import argparse
+import tempfile
+import numpy as np
+from collections.abc import Sequence
+from typing import Callable, Optional,Any, Union
+from torch.utils.data import DataLoader
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
+import rasterio
+import glob
+import timm
+from torch import nn
+from tqdm import tqdm
+from rasterio.enums import Resampling
+from matplotlib import colors
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from PIL import Image
+from torch import Tensor
+from torchgeo.samplers.utils import _to_tuple
+from torchgeo.datasets.geo import NonGeoDataset
+from torchgeo.datamodules.geo import NonGeoDataModule
+from torchgeo.datasets import NAIP, ChesapeakeDE, stack_samples, unbind_samples
+from torchgeo.datasets.utils import download_url,draw_semantic_segmentation_masks,extract_archive,rgb_to_mask,percentile_normalization
+from torchgeo.trainers import SemanticSegmentationTask
+import torchvision.transforms as T
+import torchvision
+from einops import rearrange
+from torch.utils.data import DataLoader
+from torch.masked import masked_tensor, as_masked_tensor
+from torchgeo.datamodules.utils import dataset_split
+from torchgeo.transforms.transforms import _RandomNCrop
+from torchgeo.transforms import AugmentationSequential, indices
+from kornia.augmentation import IntensityAugmentationBase2D
+from torch import Tensor
+import kornia.augmentation as K
+from torchmetrics import MetricCollection
+from torchvision.models._api import WeightsEnum
+from torchmetrics.classification import MulticlassAccuracy, MulticlassJaccardIndex, Accuracy,FBetaScore,JaccardIndex,Precision,Recall
+import lightning as L
+from lightly.loss import BarlowTwinsLoss
+from lightly.loss import NegativeCosineSimilarity
+from lightly.models.modules.heads import SimSiamPredictionHead, SimSiamProjectionHead, BarlowTwinsProjectionHead
+from lightly.transforms.multi_view_transform import MultiViewTransform
+from data_utils.statistics import WORLDVIEW3_NORMALIZE
+from data_utils.wv3_unlabelled_dataset import Worldview3UnlabelledDataset
+from train_utils.custom_multi_view_transform import CustomMultiViewTransform
+from train_utils.barlowtwins import BarlowTwins
+from train_utils.barlowtwinstrainer import BarlowTwinsTask
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
-
 import torchvision
 import torchvision.transforms as transforms
 from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
-
 import torch.distributed as dist
 import torch.utils.data.distributed
-
 import argparse
 
 parser = argparse.ArgumentParser(description='cifar10 classification models, distributed data parallel test')
@@ -23,12 +66,16 @@ parser.add_argument('--lr', default=0.1, help='')
 parser.add_argument('--batch_size', type=int, default=768, help='')
 parser.add_argument('--log_dir', help='logdir for models and losses. default = .', default='./', type=str)
 parser.add_argument("--data_dir", type=str, help="path to data")
-parser.add_argument('--max_epochs', type=int, default=4, help='')
-parser.add_argument('--num_workers', type=int, default=0, help='')
+parser.add_argument('--start_epoch', help='# of epochs. default = 0', default=0, type=int)
+parser.add_argument('--max_epochs', help='# of epochs. default = 2', default=2, type=int)
+parser.add_argument('--num_workers', type=int, default=1, help='')
 parser.add_argument('--dist-backend', default='nccl', type=str, help='')
 parser.add_argument('--world_size', default=1, type=int, help='')
 parser.add_argument('--init_method', default='tcp://127.0.0.1:3456', type=str, help='')
 parser.add_argument('--distributed', action='store_true', help='')
+parser.add_argument("--resume_from_checkpoint",
+                        help="Directory of pre-trained checkpoint including hyperparams,  \n"
+                             "None --> Do not use pre-trained model. Training will start from random initialized model", default=None)
 
 def main():
     print("Starting...")
