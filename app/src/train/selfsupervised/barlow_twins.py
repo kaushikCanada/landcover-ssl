@@ -152,8 +152,10 @@ def main():
 	start_time = time.time()
 	scaler = torch.cuda.amp.GradScaler()
 	for epoch in range(start_epoch, args.epochs):
+		np.random.seed(epoch)
+		random.seed(epoch)
 		sampler.set_epoch(epoch)
-		for step, (batch, _) in enumerate(loader, start=epoch * len(loader)):
+		for step, batch in enumerate(loader, start=epoch * len(loader)):
 			new_batch = []
 			for image in batch['image']:
 				new_batch+=[image.squeeze(1)]
