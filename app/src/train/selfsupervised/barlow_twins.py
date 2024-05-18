@@ -177,8 +177,8 @@ def main():
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			
-			elapse_time = datetime.timedelta(seconds=elapse_time)
-			print("From Rank: {}, Training time {}".format(rank, elapse_time))
+			# elapse_time = datetime.timedelta(seconds=elapse_time)
+			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		# if args.rank == 0:
 		# 	# save checkpoint
 		# 	state = dict(epoch=epoch + 1, model=model.state_dict(),
