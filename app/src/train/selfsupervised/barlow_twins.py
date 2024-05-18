@@ -127,29 +127,31 @@ def main_worker(gpu, args):
     montreal_unlabelled_dataset = Worldview3UnlabelledDataset(root = cleaned_all_montreal_256m_path,transforms=CustomMultiViewTransform(input_size = 256,normalize=WORLDVIEW3_NORMALIZE))
     print(len(montreal_unlabelled_dataset))
     # print(montreal_unlabelled_dataset[0])
-    
-    dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
-    # print(len(dataset))
+	
+	dataset = torch.utils.data.ConcatDataset([toronto_unlabelled_dataset, montreal_unlabelled_dataset])
+	# print(len(dataset))
+	
+	# dataset = torchvision.datasets.ImageFolder(args.data / 'train', Transform())
+	# sampler = torch.utils.data.distributed.DistributedSampler(dataset)
+	
+	assert args.batch_size % args.world_size == 0
+	per_device_batch_size = args.batch_size // args.world_size
+	
+	# loader = torch.utils.data.DataLoader(
+	#     dataset, batch_size=per_device_batch_size, num_workers=args.workers,
+	#     pin_memory=True, sampler=sampler)
+	
+	mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
+	mydataloader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=mysampler)
+	
+	print(len(mydataloader))
 
-    # dataset = torchvision.datasets.ImageFolder(args.data / 'train', Transform())
-    # sampler = torch.utils.data.distributed.DistributedSampler(dataset)
-  
-    assert args.batch_size % args.world_size == 0
-    per_device_batch_size = args.batch_size // args.world_size
-  
-    # loader = torch.utils.data.DataLoader(
-    #     dataset, batch_size=per_device_batch_size, num_workers=args.workers,
-    #     pin_memory=True, sampler=sampler)
-
-    mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
-    mydataloader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=mysampler)
-    
-    print(len(mydataloader))
-    loader=mydataloader
-  
-    start_time = time.time()
-    scaler = torch.cuda.amp.GradScaler()
-    for epoch in range(start_epoch, args.epochs):
+	sampler = mysampler
+	loader = mydataloader
+	
+	start_time = time.time()
+	scaler = torch.cuda.amp.GradScaler()
+	for epoch in range(start_epoch, args.epochs):
         sampler.set_epoch(epoch)
         for step, (batch, _) in enumerate(loader, start=epoch * len(loader)):
             new_batch = []
