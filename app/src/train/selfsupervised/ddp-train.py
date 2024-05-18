@@ -21,7 +21,7 @@ import argparse
 parser = argparse.ArgumentParser(description='cifar10 classification models, distributed data parallel test')
 parser.add_argument('--lr', default=0.1, help='')
 parser.add_argument('--batch_size', type=int, default=768, help='')
-parser.add_argument('--logdir', help='logdir for models and losses. default = .', default='./', type=str)
+parser.add_argument('--log_dir', help='logdir for models and losses. default = .', default='./', type=str)
 parser.add_argument("--data_dir", type=str, help="path to data")
 parser.add_argument('--max_epochs', type=int, default=4, help='')
 parser.add_argument('--num_workers', type=int, default=0, help='')
