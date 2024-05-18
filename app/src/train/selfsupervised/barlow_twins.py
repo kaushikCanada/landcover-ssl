@@ -142,7 +142,7 @@ def main_worker(gpu, args):
     #     pin_memory=True, sampler=sampler)
 
     mysampler = torch.utils.data.distributed.DistributedSampler(dataset)
-    mydataloader = DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=mysampler)
+    mydataloader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(mysampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=mysampler)
     
     print(len(mydataloader))
     loader=mydataloader
