@@ -2,3 +2,4 @@ torchgeo
 lightly
 tensorflow
 tensorboard
+umap_learn
