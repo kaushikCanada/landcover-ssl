@@ -171,9 +171,9 @@ def main():
 			# print("From Rank: {}, BATCH {} LOSS BACKWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.scale(loss).backward()
 			# print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
-			scaler.step(scheduler)
+			scaler.step(optimizer)
 			scaler.update()
-			
+			scheduler.step()
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			
