@@ -179,10 +179,10 @@ def main():
 			if step % args.print_freq == 0:
 				if args.rank == 0:
 					stats = dict(epoch=epoch, step=step,
-	                                 loss=loss.item(),
-	                                 time=int(time.time() - start_time))
-			                    print(json.dumps(stats))
-			                    print(json.dumps(stats), file=stats_file)
+						 loss=loss.item(),
+						 time=int(time.time() - start_time))
+					print(json.dumps(stats))
+					print(json.dumps(stats), file=stats_file)
 			# elapse_time = datetime.timedelta(seconds=elapse_time)
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		print("From Rank: {}, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
