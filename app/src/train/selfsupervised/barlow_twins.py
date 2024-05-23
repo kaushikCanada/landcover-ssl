@@ -45,7 +45,7 @@ parser.add_argument('--lambd', default=0.0051, type=float, metavar='L',
                     help='weight on off-diagonal terms')
 parser.add_argument('--projector', default='8192-8192-8192', type=str,
                     metavar='MLP', help='projector MLP')
-parser.add_argument('--print-freq', default=100, type=int, metavar='N',
+parser.add_argument('--print-freq', default=1, type=int, metavar='N',
                     help='print frequency')
 parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
@@ -145,7 +145,7 @@ def main():
 	loader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(sampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=sampler)
 	
 	print(len(loader))
-	
+	losses = []
 	start_time = time.time()
 	scaler = torch.cuda.amp.GradScaler()
 	for epoch in range(start_epoch, args.epochs):
@@ -176,20 +176,26 @@ def main():
 			scheduler.step(epoch)
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
-			
+			if step % args.print_freq == 0:
+                		if args.rank == 0:
+					stats = dict(epoch=epoch, step=step,
+	                                 loss=loss.item(),
+	                                 time=int(time.time() - start_time))
+			                    print(json.dumps(stats))
+			                    print(json.dumps(stats), file=stats_file)
 			# elapse_time = datetime.timedelta(seconds=elapse_time)
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		print("From Rank: {}, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
 	print("From Rank: {}, TRAINING FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-start_time))))
-		# if args.rank == 0:
-		# 	# save checkpoint
-		# 	state = dict(epoch=epoch + 1, model=model.state_dict(),
-		# 		 optimizer=optimizer.state_dict())
-		# 	torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
-	# if args.rank == 0:
-	# 	# save final model
-	# 	torch.save(model.module.backbone.state_dict(),
-	# 	   args.checkpoint_dir / 'resnet50.pth')
+		if args.rank == 0:
+			# save checkpoint
+			state = dict(epoch=epoch + 1, model=model.state_dict(),
+				 optimizer=optimizer.state_dict())
+			torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
+	if args.rank == 0:
+		# save final model
+		torch.save(model.module.backbone.state_dict(),
+		   args.checkpoint_dir / 'resnet50.pth')
 
 	torch.distributed.destroy_process_group()
 
