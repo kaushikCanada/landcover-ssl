@@ -20,3 +20,13 @@ with torch.no_grad():
 # concatenate the embeddings and convert to numpy
 embeddings = torch.cat(embeddings, dim=0)
 embeddings = embeddings.cpu().numpy()
+
+# Perform UMAP
+reducer = umap.UMAP()
+umap_embeddings = reducer.fit_transform(embeddings)
+
+# Plot the UMAP embeddings
+plt.figure(figsize=(10, 8))
+plt.scatter(umap_embeddings[:, 0], umap_embeddings[:, 1], s=5, cmap='Spectral')
+plt.title('UMAP projection of the embeddings')
+plt.show()
