@@ -177,7 +177,7 @@ def main():
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			if step % args.print_freq == 0:
-                		if args.rank == 0:
+				if args.rank == 0:
 					stats = dict(epoch=epoch, step=step,
 	                                 loss=loss.item(),
 	                                 time=int(time.time() - start_time))
