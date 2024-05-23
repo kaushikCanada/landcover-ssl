@@ -186,7 +186,6 @@ def main():
 			# elapse_time = datetime.timedelta(seconds=elapse_time)
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		print("From Rank: {}, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
-	print("From Rank: {}, TRAINING FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-start_time))))
 		if args.rank == 0:
 			# save checkpoint
 			state = dict(epoch=epoch + 1, model=model.state_dict(),
@@ -196,7 +195,7 @@ def main():
 		# save final model
 		torch.save(model.module.backbone.state_dict(),
 		   args.checkpoint_dir / 'resnet50.pth')
-
+	print("From Rank: {}, TRAINING FINISHED ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-start_time))))
 	torch.distributed.destroy_process_group()
 
 def handle_sigusr1(signum, frame):
