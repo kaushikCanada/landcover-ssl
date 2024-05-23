@@ -173,7 +173,7 @@ def main():
 			# print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.step(optimizer)
 			scaler.update()
-			scheduler.step()
+			scheduler.step(epoch)
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			
