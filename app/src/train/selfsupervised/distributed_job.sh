@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --nodes=4             
+#SBATCH --nodes=1             
 #SBATCH --gpus-per-node=4          # Request 2 GPU "generic resources”.
 #SBATCH --tasks-per-node=4   # Request 1 process per GPU. You will get 1 CPU per process by default. Request more CPUs with the "cpus-per-task" parameter to enable multiple data-loader workers to load data in parallel.
 #SBATCH --mem=80G
@@ -43,7 +43,7 @@ echo "WORLD_SIZE="$WORLD_SIZE
 #             --data_dir  ${data_dir}
             
 srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/barlow_twins.py \
-            --batch_size 1024 \
+            --batch_size 256 \
             --epochs 2 \
             --workers 10 \
             --checkpoint_dir ${log_dir} \
