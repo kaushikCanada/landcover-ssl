@@ -87,7 +87,7 @@ def main():
 		args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 		stats_file = open(args.checkpoint_dir / 'stats.txt', 'a', buffering=1)
 		print(' '.join(sys.argv))
-		print(' '.join(sys.argv), file=stats_file)
+		# print(' '.join(sys.argv), file=stats_file)
 
 	
 	print('From Rank: {}, ==> Loading model..'.format(rank))
