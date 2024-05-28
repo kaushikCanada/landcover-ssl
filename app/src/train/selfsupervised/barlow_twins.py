@@ -104,7 +104,7 @@ def main():
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 	
 	optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-4)
-	scheduler = CosineLRScheduler(optimizer, t_initial=20, lr_min=2e-8,
+	scheduler = CosineLRScheduler(optimizer, t_initial=10, lr_min=2e-8,
                   cycle_mul=2.0, cycle_decay=.5, cycle_limit=5,
                   warmup_t=10, warmup_lr_init=1e-6, warmup_prefix=False, t_in_epochs=True,
                   noise_range_t=None, noise_pct=0.67, noise_std=1.0,
