@@ -31,7 +31,7 @@ class CustomViewTransform:
     ):
         transform = K.AugmentationSequential(
                     K.RandomResizedCrop(size=(input_size, input_size),scale=(0.2, 1.0)),
-                    K.RandomRotation(degrees=45.0, p=0.5),
+                    # K.RandomRotation(degrees=45.0, p=0.5),
                     K.RandomHorizontalFlip(p=0.5),
                     K.RandomVerticalFlip(p=0.5),
                     K.RandomBoxBlur(p=0.3),
