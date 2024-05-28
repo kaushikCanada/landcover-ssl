@@ -104,11 +104,11 @@ def main():
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 	
 	optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-4)
-	scheduler = CosineLRScheduler(optimizer, t_initial=10, lr_min=2e-8,
-                  cycle_mul=2.0, cycle_decay=.5, cycle_limit=5,
-                  warmup_t=10, warmup_lr_init=1e-6, warmup_prefix=False, t_in_epochs=True,
-                  noise_range_t=None, noise_pct=0.67, noise_std=1.0,
-                  noise_seed=42, k_decay=1.0, initialize=True)
+	# scheduler = CosineLRScheduler(optimizer, t_initial=10, lr_min=2e-8,
+ #                  cycle_mul=2.0, cycle_decay=.5, cycle_limit=5,
+ #                  warmup_t=10, warmup_lr_init=1e-6, warmup_prefix=False, t_in_epochs=True,
+ #                  noise_range_t=None, noise_pct=0.67, noise_std=1.0,
+ #                  noise_seed=42, k_decay=1.0, initialize=True)
 
 	# automatically resume from checkpoint if it exists
 	if (args.checkpoint_dir / 'checkpoint.pth').is_file():
@@ -173,7 +173,7 @@ def main():
 			# print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.step(optimizer)
 			scaler.update()
-			scheduler.step(epoch)
+			# scheduler.step(epoch)
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			if step % args.print_freq == 0:
