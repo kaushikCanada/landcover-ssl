@@ -6,6 +6,8 @@
 #SBATCH --cpus-per-task=10      # CPU cores/threads
 #SBATCH --account=def-sh1352
 #SBATCH --time=0-24:00
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-user=kaushik.roy@inrs.ca
 #SBATCH --output=%N-%j.out
 
 module load python/3.11 cuda cudnn gdal libspatialindex
