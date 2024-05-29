@@ -18,6 +18,7 @@ import numpy as np
 from PIL import Image, ImageOps, ImageFilter
 from torch import nn, optim
 import torch
+import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as transforms
 import datetime
@@ -146,6 +147,7 @@ def main():
 	loader = torch.utils.data.DataLoader(dataset, batch_size=per_device_batch_size, shuffle=(sampler is None),pin_memory=True, num_workers=dict_args['workers'], sampler=sampler)
 	
 	print(len(loader))
+	avg_output_std = 0.0
 	losses = []
 	start_time = time.time()
 	scaler = torch.cuda.amp.GradScaler()
@@ -175,8 +177,19 @@ def main():
 			scaler.step(optimizer)
 			scaler.update()
 			# scheduler.step(epoch)
+			
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
+			
+			if args.rank == 0:
+				# Calculate the mean normalized standard deviation over features dimensions.
+			        # If this is << 1 / sqrt(feature_vector.shape[1]), then the model is not learning anything.
+			        output = feature_vector.detach()
+			        output = F.normalize(output, dim=1)
+			        output_std = torch.std(output, dim=0)
+			        output_std = torch.mean(output_std, dim=0)
+			        avg_output_std = 0.9 * self.avg_output_std + (1 - 0.9) * output_std.item()
+				
 			if step % args.print_freq == 0:
 				if args.rank == 0:
 					stats = dict(epoch=epoch, step=step,
@@ -188,9 +201,12 @@ def main():
 			# print("From Rank: {}, Training time {}".format(rank, elapse_time))
 		print("From Rank: {}, EPOCH FINISHED DATA MIGHT BE LOADING ---------------- {}".format(rank,  datetime.timedelta(seconds=(time.time()-epoch_start))))
 		if args.rank == 0:
+			# the level of collapse is large if the standard deviation of the l2
+			# normalized output is much smaller than 1 / sqrt(dim)
+			collapse_level = max(0.0, 1 - math.sqrt(feature_vector.shape[1]) * avg_output_std)
+			print("From Rank: {}, COLLAPSE LEVEL TILL NOW = {} ---------------- {}".format(rank, collapse_level, datetime.timedelta(seconds=(time.time()-epoch_start))))
 			# save checkpoint
-			state = dict(epoch=epoch + 1, model=model.state_dict(),
-				 optimizer=optimizer.state_dict())
+			state = dict(epoch=epoch + 1, model=model.state_dict(), collapse_level=collapse_level, optimizer=optimizer.state_dict())
 			torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
 	if args.rank == 0:
 		# save final model
