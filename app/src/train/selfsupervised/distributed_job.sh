@@ -44,7 +44,7 @@ echo "WORLD_SIZE="$WORLD_SIZE
             
 srun python ~/scratch/landcover-ssl/app/src/train/selfsupervised/barlow_twins.py \
             --batch_size 1024 \
-            --epochs 1000 \
+            --epochs 5 \
             --workers 10 \
             --checkpoint_dir ${log_dir} \
             --data_dir  ${data_dir}
