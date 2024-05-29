@@ -39,7 +39,7 @@ parser.add_argument('--learning-rate-weights', default=0.2, type=float, metavar=
                     help='base learning rate for weights')
 parser.add_argument('--learning-rate-biases', default=0.0048, type=float, metavar='LR',
                     help='base learning rate for biases and batch norm parameters')
-parser.add_argument('--weight-decay', default=1e-6, type=float, metavar='W',
+parser.add_argument('--weight_decay', default=1e-6, type=float, metavar='W',
                     help='weight decay')
 parser.add_argument('--lambd', default=0.0051, type=float, metavar='L',
                     help='weight on off-diagonal terms')
@@ -103,7 +103,7 @@ def main():
 	parameters = [{'params': param_weights}, {'params': param_biases}]
 	model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 
-	optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+	optimizer = torch.optim.Adam(model.parameters(), lr=0.001,weight_decay=args.weight_decay)
 	# optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-4)
 	# scheduler = CosineLRScheduler(optimizer, t_initial=10, lr_min=2e-8,
  #                  cycle_mul=2.0, cycle_decay=.5, cycle_limit=5,
