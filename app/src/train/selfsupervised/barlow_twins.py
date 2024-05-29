@@ -168,7 +168,7 @@ def main():
 			optimizer.zero_grad()
 			with torch.cuda.amp.autocast():
 				# print("From Rank: {}, BATCH {} LOSS FORWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
-				loss = model.forward(y1, y2)
+				loss,feature_vector = model.forward(y1, y2)
 			# print("From Rank: {}, BATCH {} LOSS BACKWARD STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
 			scaler.scale(loss).backward()
 			# print("From Rank: {}, BATCH {} STEP OPTIMIZER STARTED ---------------- {}".format(rank, step, datetime.timedelta(seconds=(time.time()-start))))
