@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=10      # CPU cores/threads
 #SBATCH --account=def-sh1352
 #SBATCH --time=0-24:00
-#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=BEGIN,FAIL,END
 #SBATCH --mail-user=kaushik.roy@inrs.ca
 #SBATCH --output=%N-%j.out
 
