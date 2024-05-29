@@ -24,6 +24,7 @@ import torchvision.transforms as transforms
 import datetime
 import timm
 from timm.scheduler.cosine_lr import CosineLRScheduler
+from lightly.utils.debug import std_of_l2_normalized
 from data_utils.statistics import WORLDVIEW3_NORMALIZE
 from data_utils.wv3_unlabelled_dataset import Worldview3UnlabelledDataset
 from train_utils.custom_multi_view_transform import CustomMultiViewTransform
@@ -181,15 +182,15 @@ def main():
 			batch_time = time.time() - start
 			elapse_time = time.time() - epoch_start
 			
-			if args.rank == 0:
-				# Calculate the mean normalized standard deviation over features dimensions.
-			        # If this is << 1 / sqrt(feature_vector.shape[1]), then the model is not learning anything.
-			        output = feature_vector.detach()
-			        output = F.normalize(output, dim=1)
-			        output_std = torch.std(output, dim=0)
-			        output_std = torch.mean(output_std, dim=0)
-			        avg_output_std = 0.9 * avg_output_std + (1 - 0.9) * output_std.item()
-				
+			# if args.rank == 0:
+			# Calculate the mean normalized standard deviation over features dimensions.
+			# If this is << 1 / sqrt(feature_vector.shape[1]), then the model is not learning anything.
+			output = feature_vector.detach()
+			output = F.normalize(output, dim=1)
+			output_std = torch.std(output, dim=0)
+			output_std = torch.mean(output_std, dim=0)
+			avg_output_std = 0.9 * avg_output_std + (1 - 0.9) * output_std.item()
+			print("avg_output_std {}",avg_output_std)
 			if step % args.print_freq == 0:
 				if args.rank == 0:
 					stats = dict(epoch=epoch, step=step,
