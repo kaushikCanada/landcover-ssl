@@ -188,7 +188,7 @@ def main():
 			        output = F.normalize(output, dim=1)
 			        output_std = torch.std(output, dim=0)
 			        output_std = torch.mean(output_std, dim=0)
-			        avg_output_std = 0.9 * self.avg_output_std + (1 - 0.9) * output_std.item()
+			        avg_output_std = 0.9 * avg_output_std + (1 - 0.9) * output_std.item()
 				
 			if step % args.print_freq == 0:
 				if args.rank == 0:
