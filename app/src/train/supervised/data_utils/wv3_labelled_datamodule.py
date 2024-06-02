@@ -1,6 +1,6 @@
 import torchvision.transforms as T
 import torchvision
-random_split
+from torch.utils.data import random_split
 from torch import Tensor
 import torch
 import kornia.augmentation as K
