@@ -2,6 +2,7 @@ import torchvision.transforms as T
 import torchvision
 random_split
 from torch import Tensor
+import torch
 import kornia.augmentation as K
 from data_utils.statistics import WORLDVIEW3_NORMALIZE
 from data_utils.wv3_labelled_dataset import Worldview3LabelledDataset
@@ -58,6 +59,11 @@ class Worldview3LabelledDataModule(NonGeoDataModule):
         """
         # print(batch_size)
         self.dataset = Worldview3LabelledDataset(**self.kwargs)
+        generator = torch.Generator().manual_seed(0)
+        if stage in ['fit', 'validate','test']:
+            self.train_dataset, self.val_dataset, self.test_dataset = random_split(
+                self.dataset, [1 - (self.val_split_pct+self.test_split_pct),self.val_split_pct, self.test_split_pct], generator
+            )
 
     def on_after_batch_transfer(
         self, batch: dict[str, Tensor], dataloader_idx: int
