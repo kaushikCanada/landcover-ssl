@@ -24,7 +24,7 @@ from torch import Tensor
 import kornia.augmentation as K
 from data_utils.statistics import WORLDVIEW3_NORMALIZE
 
-class Worldview3UnlabelledDataset(NonGeoDataset):
+class Worldview3LabelledDataset(NonGeoDataset):
     classes = [
         "other",
         "road",
@@ -97,9 +97,9 @@ class Worldview3UnlabelledDataset(NonGeoDataset):
 
         files = []
         for msi in sorted(images):
-            ndvi = msi.replace(self.ndvi_root, self.ndvi_root)
-            ndwi = msi.replace(self.ndwi_root, self.ndwi_root)
-            pisi = msi.replace(self.pisi_root, self.pisi_root)
+            ndvi = msi.replace(self.msi_root, self.ndvi_root)
+            ndwi = msi.replace(self.msi_root, self.ndwi_root)
+            pisi = msi.replace(self.msi_root, self.pisi_root)
 
             if self.split == "train":
                 target = msi.replace(self.msi_root, self.lbl_root)
@@ -226,11 +226,11 @@ class Worldview3UnlabelledDataset(NonGeoDataset):
         fig, axs = plt.subplots(ncols=ncols, figsize=(ncols * 10, 10))
         axs[0].imshow(msi)
         axs[0].axis("off")
-        axs[1].imshow(ndvi)
+        axs[1].imshow(ndvi, cmap = plt.cm.viridis)
         axs[1].axis("off")
-        axs[2].imshow(ndwi)
+        axs[2].imshow(ndwi, cmap = plt.cm.plasma)
         axs[2].axis("off")
-        axs[3].imshow(pisi)
+        axs[3].imshow(pisi, cmap = plt.cm.Greys)
         axs[3].axis("off")
         if showing_mask:
             axs[4].imshow(mask, vmin=1, vmax=8, cmap=cmap, interpolation="none")
@@ -258,4 +258,4 @@ class Worldview3UnlabelledDataset(NonGeoDataset):
         if suptitle is not None:
             plt.suptitle(suptitle)
 
-        return fig
+        return None
