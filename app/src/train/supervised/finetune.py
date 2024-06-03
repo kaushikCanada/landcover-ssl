@@ -168,7 +168,7 @@ def main():
 	model.to(device)
 
 	print('making model')
-	train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=dict_args['epochs'], checkpoint_path=dict_args['checkpoint_dir']+"/"+"checkpoint.pth.tar")
+	train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=dict_args['epochs'], checkpoint_path=dict_args['checkpoint_dir']/"checkpoint.pth.tar")
 	# trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
 if __name__ == '__main__':
