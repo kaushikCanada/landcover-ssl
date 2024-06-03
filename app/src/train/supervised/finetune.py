@@ -12,6 +12,7 @@ import segmentation_models_pytorch as smp
 import torch.nn as nn
 from matplotlib.figure import Figure
 from torch import Tensor
+import torch
 from torchmetrics import MetricCollection
 from torchmetrics.classification import MulticlassAccuracy, MulticlassJaccardIndex
 from torchvision.models._api import WeightsEnum
