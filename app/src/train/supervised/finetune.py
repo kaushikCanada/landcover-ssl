@@ -63,30 +63,31 @@ def main():
 	args.ngpus_per_node = torch.cuda.device_count()
 	dict_args = vars(args)
 	if 'SLURM_JOB_ID' in os.environ:
-        pass
+	pass
+	
+	model = smp.Unet(
+	encoder_name="resnet50",        
+	encoder_weights=None,     
+	in_channels=11,                 # Input channels
+	classes=8                       # Number of output classes
+	)
+	
+	criterion = nn.CrossEntropyLoss()
+	optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    model = smp.Unet(
-        encoder_name="resnet50",        # Choose encoder, e.g., resnet50, efficientnet-b7, etc.
-        encoder_weights=None,     # Use pre-trained weights for encoder initialization
-        in_channels=11,                 # Input channels
-        classes=8                       # Number of output classes
-    )
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-    cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
-    batch_size = dict_args['batch_size']
-    num_workers = dict_args['workers']
-    
-    dm = Worldview3LabelledDataModule(
-                root=root,batch_size=batch_size
-            )
-    
-    dm.setup("fit")
-    
-    train_loader = dm.train_dataloader()
-    
-    trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
+	cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
+	batch_size = dict_args['batch_size']
+	num_workers = dict_args['workers']
+	
+	dm = Worldview3LabelledDataModule(
+		root=root,batch_size=batch_size
+	    )
+	
+	dm.setup("fit")
+	
+	train_loader = dm.train_dataloader()
+	
+	trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
 if __name__ == '__main__':
     main()
