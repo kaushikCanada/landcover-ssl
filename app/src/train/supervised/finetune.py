@@ -65,7 +65,7 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='
         # epoch_loss = running_loss / len(dataloader.dataset)
         # print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
 
-    return model
+	return model
     
 def main():
 	args = parser.parse_args()
