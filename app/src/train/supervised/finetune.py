@@ -63,7 +63,7 @@ def main():
 	args.ngpus_per_node = torch.cuda.device_count()
 	dict_args = vars(args)
 	if 'SLURM_JOB_ID' in os.environ:
-	pass
+		pass
 	
 	model = smp.Unet(
 	encoder_name="resnet50",        
