@@ -91,20 +91,25 @@ def load_checkpoint(filename, model, optimizer):
         return 0
 
 # Main Training Loop
-def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=20, checkpoint_path="checkpoint.pth.tar"):
-    start_epoch = load_checkpoint(checkpoint_path, model, optimizer)
-    best_loss = float('inf')
+def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=20, resume = False, checkpoint_path="checkpoint.pth.tar"):
+	if resume:
+    		start_epoch = load_checkpoint(checkpoint_path, model, optimizer)
+	else:
+		start_epoch = 0
 
-    for epoch in range(start_epoch, num_epochs):
-        print(f"Epoch {epoch + 1}/{num_epochs}")
-        train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn, device)
-        val_loss = validate_one_epoch(model, val_loader, loss_fn, device)
-        print(f"Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
+	best_loss = float('inf')
 
-        if val_loss < best_loss:
-            best_loss = val_loss
-            save_checkpoint({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer': optimizer.state_dict()}, checkpoint_path)
-            print("Model saved!")
+	for epoch in range(start_epoch, num_epochs):
+		print(f"Epoch {epoch + 1}/{num_epochs}")
+		train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn, device)
+		val_loss = validate_one_epoch(model, val_loader, loss_fn, device)
+		print(f"Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
+		
+		if val_loss < best_loss:
+			best_loss = val_loss
+			if resume:
+				save_checkpoint({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer': optimizer.state_dict()}, checkpoint_path)
+				print("Model saved!")
 
 
 # def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
@@ -168,7 +173,7 @@ def main():
 	model.to(device)
 
 	print('making model')
-	train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=dict_args['epochs'], checkpoint_path=dict_args['checkpoint_dir']/"checkpoint.pth.tar")
+	train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=dict_args['epochs'], resume=False, checkpoint_path=dict_args['checkpoint_dir']/"checkpoint.pth.tar")
 	# trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
 if __name__ == '__main__':
