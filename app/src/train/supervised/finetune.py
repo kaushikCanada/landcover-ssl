@@ -85,7 +85,8 @@ def main():
 	dm.setup("fit")
 	
 	train_loader = dm.train_dataloader()
-	
+
+	print('making model')
 	trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
 if __name__ == '__main__':
