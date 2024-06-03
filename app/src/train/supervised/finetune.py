@@ -52,8 +52,8 @@ class WeightedCrossEntropyLoss(nn.Module):
 def train_one_epoch(model, dataloader, optimizer, loss_fn, device):
     model.train()
     epoch_loss = 0
-    for images, masks in tqdm(dataloader, desc="Training", leave=False):
-        images, masks = images.to(device), masks.to(device)
+    for batch in tqdm(dataloader, desc="Training", leave=False):
+        images, masks = batch['image'].to(device), batch['mask'].to(device)
         optimizer.zero_grad()
         outputs = model(images)
         loss = loss_fn(outputs, masks)
@@ -67,8 +67,8 @@ def validate_one_epoch(model, dataloader, loss_fn, device):
     model.eval()
     epoch_loss = 0
     with torch.no_grad():
-        for images, masks in tqdm(dataloader, desc="Validation", leave=False):
-            images, masks = images.to(device), masks.to(device)
+        for batch in tqdm(dataloader, desc="Validation", leave=False):
+            images, masks = batch['image'].to(device), batch['mask'].to(device)
             outputs = model(images)
             loss = loss_fn(outputs, masks)
             epoch_loss += loss.item()
