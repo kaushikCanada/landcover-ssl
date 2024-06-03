@@ -34,34 +34,107 @@ parser.add_argument('--batch_size', default=2048, type=int, metavar='N',
 parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 
-def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
-	model = model.to(device)
-	for epoch in tqdm(range(num_epochs)):
-		model.train()
-		running_loss = 0.0
-		i=1
-		for batch in dataloader:
-			images = batch['image']
-			masks = batch['mask']
-			print(images.shape)
-			print(masks.shape)
-		
-			images = images.to(device)
-			masks = masks.to(device) - 1  # Shift labels from 1-8 to 0-7 for CrossEntropyLoss
-			optimizer.zero_grad()
-			outputs = model(images)
-			loss = criterion(outputs, masks)
-			loss.backward()
-			optimizer.step()
-			
-			running_loss += loss.item() * images.size(0)
-			i=i+1
-			if i>5:
-				break
-		epoch_loss = running_loss / len(dataloader.dataset)
-		print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
+# Helper function for converting 1-8 labels to 0-7
+def mask_labels_1_to_8_to_0_to_7(mask):
+    return mask - 1
 
-	return model
+# Loss and Optimizer
+class WeightedCrossEntropyLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.criterion = nn.CrossEntropyLoss()
+
+    def forward(self, inputs, targets):
+        targets = mask_labels_1_to_8_to_0_to_7(targets)
+        return self.criterion(inputs, targets)
+
+# Training Function
+def train_one_epoch(model, dataloader, optimizer, loss_fn, device):
+    model.train()
+    epoch_loss = 0
+    for images, masks in tqdm(dataloader, desc="Training", leave=False):
+        images, masks = images.to(device), masks.to(device)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = loss_fn(outputs, masks)
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+    return epoch_loss / len(dataloader)
+
+# Validation Function
+def validate_one_epoch(model, dataloader, loss_fn, device):
+    model.eval()
+    epoch_loss = 0
+    with torch.no_grad():
+        for images, masks in tqdm(dataloader, desc="Validation", leave=False):
+            images, masks = images.to(device), masks.to(device)
+            outputs = model(images)
+            loss = loss_fn(outputs, masks)
+            epoch_loss += loss.item()
+    return epoch_loss / len(dataloader)
+
+# Save and Load Checkpoint
+def save_checkpoint(state, filename="checkpoint.pth.tar"):
+    torch.save(state, filename)
+
+def load_checkpoint(filename, model, optimizer):
+    if os.path.isfile(filename):
+        checkpoint = torch.load(filename)
+        model.load_state_dict(checkpoint['state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
+        epoch = checkpoint['epoch']
+        print(f"Loaded checkpoint '{filename}' (epoch {epoch})")
+        return epoch
+    else:
+        print(f"No checkpoint found at '{filename}'")
+        return 0
+
+# Main Training Loop
+def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=20, checkpoint_path="checkpoint.pth.tar"):
+    start_epoch = load_checkpoint(checkpoint_path, model, optimizer)
+    best_loss = float('inf')
+
+    for epoch in range(start_epoch, num_epochs):
+        print(f"Epoch {epoch + 1}/{num_epochs}")
+        train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn, device)
+        val_loss = validate_one_epoch(model, val_loader, loss_fn, device)
+        print(f"Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
+
+        if val_loss < best_loss:
+            best_loss = val_loss
+            save_checkpoint({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer': optimizer.state_dict()}, checkpoint_path)
+            print("Model saved!")
+
+
+# def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
+# 	model = model.to(device)
+# 	for epoch in tqdm(range(num_epochs)):
+# 		model.train()
+# 		running_loss = 0.0
+# 		i=1
+# 		for batch in dataloader:
+# 			images = batch['image']
+# 			masks = batch['mask']
+# 			print(images.shape)
+# 			print(masks.shape)
+		
+# 			images = images.to(device)
+# 			masks = masks.to(device) - 1  # Shift labels from 1-8 to 0-7 for CrossEntropyLoss
+# 			optimizer.zero_grad()
+# 			outputs = model(images)
+# 			loss = criterion(outputs, masks)
+# 			loss.backward()
+# 			optimizer.step()
+			
+# 			running_loss += loss.item() * images.size(0)
+# 			i=i+1
+# 			if i>5:
+# 				break
+# 		epoch_loss = running_loss / len(dataloader.dataset)
+# 		print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
+
+# 	return model
     
 def main():
 	args = parser.parse_args()
@@ -78,7 +151,7 @@ def main():
 	
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.Adam(model.parameters(), lr=0.001)
-
+	loss_fn = WeightedCrossEntropyLoss()
 	cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
 	batch_size = dict_args['batch_size']
 	num_workers = dict_args['workers']
@@ -90,9 +163,13 @@ def main():
 	dm.setup("fit")
 	
 	train_loader = dm.train_dataloader()
+	val_loader = dm.val_dataloader()
+	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+	model.to(device)
 
 	print('making model')
-	trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
+	train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num_epochs=dict_args['epochs'], checkpoint_path=dict_args['checkpoint_dir']+"/"+"checkpoint.pth.tar")
+	# trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
 if __name__ == '__main__':
     main()
