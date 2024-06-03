@@ -32,7 +32,7 @@ export WORLD_SIZE=$(($SLURM_NNODES * $SLURM_NTASKS_PER_NODE))
 echo "WORLD_SIZE="$WORLD_SIZE
 
 srun python ~/scratch/landcover-ssl/app/src/train/supervised/finetune.py \
-            --batch_size 32 \
+            --batch_size 16 \
             --epochs 5 \
             --workers 10 \
             --checkpoint_dir ${log_dir} \
