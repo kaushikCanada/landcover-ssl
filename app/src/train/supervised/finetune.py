@@ -84,7 +84,7 @@ def main():
 	num_workers = dict_args['workers']
 	
 	dm = Worldview3LabelledDataModule(
-		root=root,batch_size=batch_size
+		root=cleaned_gta_labelled_256m_path,batch_size=batch_size
 	    )
 	
 	dm.setup("fit")
