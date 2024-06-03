@@ -4,6 +4,7 @@ from torch.utils.data import random_split
 from torch import Tensor
 import torch
 import kornia.augmentation as K
+from torchgeo.geo import NonGeoDataModule
 from data_utils.statistics import WORLDVIEW3_NORMALIZE
 from data_utils.wv3_labelled_dataset import Worldview3LabelledDataset
 
