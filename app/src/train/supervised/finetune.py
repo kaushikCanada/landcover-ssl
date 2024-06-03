@@ -18,7 +18,7 @@ from torchgeo.trainers import utils
 from torchgeo.models import FCN, get_weight
 import timm
 import segmentation_models_pytorch as smp
-from datamodule import Worldview3LabelledDataModule
+from data_utils.wv3_labelled_datamodule import Worldview3LabelledDataModule
 
 parser = argparse.ArgumentParser(description='Barlow Twins Training')
 parser.add_argument("--data_dir", type=str, help="path to data")
