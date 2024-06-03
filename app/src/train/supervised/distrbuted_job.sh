@@ -33,7 +33,7 @@ echo "WORLD_SIZE="$WORLD_SIZE
 
 srun python ~/scratch/landcover-ssl/app/src/train/supervised/finetune.py \
             --batch_size 16 \
-            --epochs 5 \
+            --epochs 2 \
             --workers 10 \
             --checkpoint_dir ${log_dir} \
             --data_dir  ${data_dir}
