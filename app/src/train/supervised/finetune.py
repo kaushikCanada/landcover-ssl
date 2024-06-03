@@ -20,15 +20,14 @@ import timm
 import segmentation_models_pytorch as smp
 from datamodule import Worldview3LabelledDataModule
 
-model = smp.Unet(
-    encoder_name="resnet50",        # Choose encoder, e.g., resnet50, efficientnet-b7, etc.
-    encoder_weights=None,     # Use pre-trained weights for encoder initialization
-    in_channels=11,                 # Input channels
-    classes=8                       # Number of output classes
-)
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
-
+parser = argparse.ArgumentParser(description='Barlow Twins Training')
+parser.add_argument("--data_dir", type=str, help="path to data")
+parser.add_argument('--workers', default=8, type=int, metavar='N',
+                    help='number of data loader workers')
+parser.add_argument('--epochs', default=1000, type=int, metavar='N',
+                    help='number of total epochs to run')
+parser.add_argument('--batch_size', default=2048, type=int, metavar='N',
+                    help='mini-batch size')
 
 def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
     model = model.to(device)
@@ -58,17 +57,36 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='
         print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
 
     return model
+    
+def main():
+	args = parser.parse_args()
+	args.ngpus_per_node = torch.cuda.device_count()
+	dict_args = vars(args)
+	if 'SLURM_JOB_ID' in os.environ:
+        pass
 
-root= '../eodata/AZURE/cleaned_gta_labelled_256m/'
-batch_size = 12
-num_workers = 0
+    model = smp.Unet(
+        encoder_name="resnet50",        # Choose encoder, e.g., resnet50, efficientnet-b7, etc.
+        encoder_weights=None,     # Use pre-trained weights for encoder initialization
+        in_channels=11,                 # Input channels
+        classes=8                       # Number of output classes
+    )
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-dm = Worldview3LabelledDataModule(
-            root=root,batch_size=batch_size
-        )
+    cleaned_gta_labelled_256m_path = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
+    batch_size = dict_args['batch_size']
+    num_workers = dict_args['workers']
+    
+    dm = Worldview3LabelledDataModule(
+                root=root,batch_size=batch_size
+            )
+    
+    dm.setup("fit")
+    
+    train_loader = dm.train_dataloader()
+    
+    trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=dict_args['epochs'])
 
-dm.setup("fit")
-
-train_loader = dm.train_dataloader()
-
-trained_model = train_model(model, train_loader, criterion, optimizer, num_epochs=2)
+if __name__ == '__main__':
+    main()
