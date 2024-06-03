@@ -169,7 +169,7 @@ def main():
 	
 	train_loader = dm.train_dataloader()
 	val_loader = dm.val_dataloader()
-	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+	device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 	model.to(device)
 
 	print('making model')
