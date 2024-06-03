@@ -10,7 +10,7 @@
 #SBATCH --mail-user=kaushik.roy@inrs.ca
 #SBATCH --output=%N-%j.out
 
-module load python/3.11 gdal/3.7.2 libspatialindex
+module load python/3.11 libspatialindex
 
 echo "Hello World"
 nvidia-smi
