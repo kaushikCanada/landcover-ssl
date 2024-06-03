@@ -29,6 +29,8 @@ parser.add_argument('--epochs', default=1000, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--batch_size', default=2048, type=int, metavar='N',
                     help='mini-batch size')
+parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
+                    metavar='DIR', help='path to checkpoint directory')
 
 def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
     model = model.to(device)
