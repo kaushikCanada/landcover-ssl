@@ -82,4 +82,6 @@ class Worldview3LabelledDataModule(NonGeoDataModule):
         Returns:
             A batch of data.
         """
-        pass
+        batch = self.aug(batch)
+
+        return batch
