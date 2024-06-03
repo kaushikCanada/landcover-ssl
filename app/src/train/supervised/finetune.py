@@ -56,7 +56,7 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='
             running_loss += loss.item() * images.size(0)
             # print('loop')
             i=i+1
-            if i>50:
+            if i>5:
                 break
         epoch_loss = running_loss / len(dataloader.dataset)
         print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
