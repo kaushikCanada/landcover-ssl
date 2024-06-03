@@ -64,7 +64,6 @@ def main():
 	dict_args = vars(args)
 	if 'SLURM_JOB_ID' in os.environ:
 		pass
-	
 	model = smp.Unet(
 	encoder_name="resnet50",        
 	encoder_weights=None,     
