@@ -39,7 +39,7 @@ echo "WORLD_SIZE="$WORLD_SIZE
 #             --data_dir  ${data_dir}
 
 srun python ~/scratch/landcover-ssl/app/src/train/supervised/linear2D_probe.py \
-            --batch_size 32 \
+            --batch_size 16 \
             --lr 0.001 \
             --max_epochs 2 \
             --num_workers 10 \
