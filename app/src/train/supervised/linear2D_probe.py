@@ -42,7 +42,7 @@ def main():
                 lr=lr,
                 patience=10,
             )
-            trainer = pl.Trainer(max_epochs=2, accelerator='gpu', devices=1, default_root_dir = dict_args['checkpoint_dir'])
+            trainer = pl.Trainer(max_epochs=2, accelerator="gpu", devices=[0], num_nodes=1, default_root_dir = dict_args['checkpoint_dir'])
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
 
