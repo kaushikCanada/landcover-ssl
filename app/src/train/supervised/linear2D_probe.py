@@ -1,8 +1,8 @@
 import pytorch_lightning as pl
 import torch
 from train_utils.trainer import MyModel
-from datamodule import Worldview3LabelledDataModule
 import argparse
+from data_utils.wv3_labelled_datamodule import Worldview3LabelledDataModule
 
 parser = argparse.ArgumentParser(description='Worldview 3')
 parser.add_argument('--lr', default=0.001, help='Learning Rate')
