@@ -176,10 +176,17 @@ class MyModel(pl.LightningModule):
             """
             optimizer = AdamW(self.parameters(), lr=self.hparams['lr'])
             scheduler = ReduceLROnPlateau(optimizer, patience=self.hparams['patience'])
+
             return {
-                'optimizer': optimizer,
-                'lr_scheduler': {'scheduler': scheduler, 'monitor': self.monitor},
-            }
+        "optimizer": optimizer,
+        "lr_scheduler": {
+            "scheduler": scheduler,
+            "monitor": self.monitor,
+            "frequency": "1",
+            # If "monitor" references validation metrics, then "frequency" should be set to a
+            # multiple of "trainer.check_val_every_n_epoch".
+        },
+    }
 
     def training_step(
         self, batch: Any, batch_idx: int, dataloader_idx: int = 0
