@@ -14,6 +14,7 @@ from torchvision.models._api import WeightsEnum
 from torchgeo.datasets import stack_samples, unbind_samples
 from torchgeo.trainers import utils
 from torchgeo.models import FCN, get_weight
+from torch.optim import AdamW
 
 
 class MyModel(pl.LightningModule):
@@ -196,12 +197,48 @@ class MyModel(pl.LightningModule):
         x = batch['image']
         y = batch['mask']-1 # because labels are from 1 to 8, hencle
         batch_size = x.shape[0]
-        y_hat = self(x)
+        y_hat = self(x) + 1
         loss: Tensor = self.criterion(y_hat, y)
         self.log('train_loss', loss, batch_size=batch_size)
         self.train_metrics(y_hat, y)
         self.log_dict(self.train_metrics, batch_size=batch_size)
         return loss
+        
+    def validation_step(
+        self, batch: Any, batch_idx: int, dataloader_idx: int = 0
+    ) -> None:
+        """Compute the validation loss and additional metrics.
+
+        Args:
+            batch: The output of your DataLoader.
+            batch_idx: Integer displaying index of this batch.
+            dataloader_idx: Index of the current dataloader.
+        """
+        x = batch['image']
+        y = batch['mask']
+        batch_size = x.shape[0]
+        y_hat = self(x) + 1
+        loss = self.criterion(y_hat, y)
+        self.log('val_loss', loss, batch_size=batch_size)
+        self.val_metrics(y_hat, y)
+        self.log_dict(self.val_metrics, batch_size=batch_size)
+
+    def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> None:
+        """Compute the test loss and additional metrics.
+
+        Args:
+            batch: The output of your DataLoader.
+            batch_idx: Integer displaying index of this batch.
+            dataloader_idx: Index of the current dataloader.
+        """
+        x = batch['image']
+        y = batch['mask']
+        batch_size = x.shape[0]
+        y_hat = self(x) + 1
+        loss = self.criterion(y_hat, y)
+        self.log('test_loss', loss, batch_size=batch_size)
+        self.test_metrics(y_hat, y)
+        self.log_dict(self.test_metrics, batch_size=batch_size)
         
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         """Forward pass of the model.
