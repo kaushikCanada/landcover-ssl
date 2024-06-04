@@ -21,6 +21,7 @@ def main():
             root = dict_args['data_dir'] + "/AZURE/cleaned_gta_labelled_256m/"
             batch_size = dict_args['batch_size']
             num_workers = dict_args['num_workers']
+            lr = float(dict_args['lr'])
             
             dm = Worldview3LabelledDataModule(
                         root=root,batch_size=batch_size,num_workers=num_workers
@@ -38,7 +39,7 @@ def main():
                 num_classes=8,
                 loss="ce",
                 ignore_index=None,
-                lr=dict_args['lr'],
+                lr=lr,
                 patience=10,
             )
             trainer = pl.Trainer(max_epochs=2, accelerator='gpu', devices=1, default_root_dir = dict_args['checkpoint_dir'])
