@@ -66,7 +66,9 @@ def train_one_epoch(model, dataloader, optimizer, loss_fn, device):
 		loss.backward()
 		optimizer.step()
 		epoch_loss += loss.item()
-	return epoch_loss / len(dataloader)
+		preds = torch.argmax(outputs, dim=1)
+		epoch_accuracy += train_accuracy(preds, mask_labels_1_to_8_to_0_to_7(masks)).item()
+	return epoch_loss / len(dataloader), epoch_accuracy / len(dataloader)
 
 # Validation Function
 def validate_one_epoch(model, dataloader, loss_fn, device):
