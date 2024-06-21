@@ -34,6 +34,11 @@ parser.add_argument('--batch_size', default=2048, type=int, metavar='N',
 parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 
+# Metrics
+train_accuracy = MulticlassAccuracy(num_classes=8).to(device)
+val_accuracy = MulticlassAccuracy(num_classes=8).to(device)
+test_accuracy = MulticlassAccuracy(num_classes=8).to(device)
+
 # Helper function for converting 1-8 labels to 0-7
 def mask_labels_1_to_8_to_0_to_7(mask):
     return mask - 1
@@ -50,17 +55,18 @@ class WeightedCrossEntropyLoss(nn.Module):
 
 # Training Function
 def train_one_epoch(model, dataloader, optimizer, loss_fn, device):
-    model.train()
-    epoch_loss = 0
-    for batch in tqdm(dataloader, desc="Training", leave=False):
-        images, masks = batch['image'].to(device), batch['mask'].to(device)
-        optimizer.zero_grad()
-        outputs = model(images)
-        loss = loss_fn(outputs, masks)
-        loss.backward()
-        optimizer.step()
-        epoch_loss += loss.item()
-    return epoch_loss / len(dataloader)
+	model.train()
+	epoch_loss = 0
+	epoch_accuracy = 0
+	for batch in tqdm(dataloader, desc="Training", leave=False):
+		images, masks = batch['image'].to(device), batch['mask'].to(device)
+		optimizer.zero_grad()
+		outputs = model(images)
+		loss = loss_fn(outputs, masks)
+		loss.backward()
+		optimizer.step()
+		epoch_loss += loss.item()
+	return epoch_loss / len(dataloader)
 
 # Validation Function
 def validate_one_epoch(model, dataloader, loss_fn, device):
@@ -73,6 +79,23 @@ def validate_one_epoch(model, dataloader, loss_fn, device):
             loss = loss_fn(outputs, masks)
             epoch_loss += loss.item()
     return epoch_loss / len(dataloader)
+
+# Test Function
+def test_one_epoch(model, dataloader, loss_fn, device):
+    model.eval()
+    epoch_loss = 0
+    epoch_accuracy = 0
+    with torch.no_grad():
+        for images, masks in tqdm(dataloader, desc="Testing", leave=False):
+            images, masks = images.to(device), masks.to(device)
+            outputs = model(images)
+            loss = loss_fn(outputs, masks)
+            epoch_loss += loss.item()
+
+            preds = torch.argmax(outputs, dim=1)
+            epoch_accuracy += test_accuracy(preds, mask_labels_1_to_8_to_0_to_7(masks)).item()
+
+    return epoch_loss / len(dataloader), epoch_accuracy / len(dataloader)
 
 # Save and Load Checkpoint
 def save_checkpoint(state, filename="checkpoint.pth.tar"):
