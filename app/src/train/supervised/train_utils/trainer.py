@@ -53,6 +53,7 @@ class MyModel(pl.LightningModule):
             ignore: Arguments to skip when saving hyperparameters.
         """
         super().__init__()
+        self.automatic_optimization = False
         self.weights = weights
         ignore = 'weights'
         self.save_hyperparameters(ignore=ignore)
