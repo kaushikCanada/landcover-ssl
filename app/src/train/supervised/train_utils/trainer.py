@@ -27,9 +27,6 @@ class MyModel(pl.LightningModule):
     #: Whether the goal is to minimize or maximize the performance metric to monitor.
     mode = 'min'
     
-    # @property
-    # def automatic_optimization(self) -> bool:
-    #     return False
             
     def __init__(self,
                 model: str = 'unet',
@@ -53,7 +50,6 @@ class MyModel(pl.LightningModule):
             ignore: Arguments to skip when saving hyperparameters.
         """
         super().__init__()
-        # self.automatic_optimization = False
         self.weights = weights
         ignore = 'weights'
         self.save_hyperparameters(ignore=ignore)
