@@ -47,7 +47,7 @@ def main():
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
             
-            dm.setup("fit")
+            dm.setup("test")
             trainer.test(model=task, dm.test_dataloader())
             
 
