@@ -44,7 +44,7 @@ def main():
             )
             trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], accelerator="gpu", devices=[0], num_nodes=1, default_root_dir = dict_args['checkpoint_dir'])
             
-            trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
+            trainer.fit(model=task, train_dataloaders = dm.train_dataloader())#, val_dataloaders = dm.val_dataloader())
 
 if __name__=='__main__':
    main()
