@@ -123,9 +123,9 @@ class MyModel(pl.LightningModule):
         loss: str = self.hparams['loss']
         ignore_index = self.hparams['ignore_index']
         if loss == 'ce':
-            ignore_value = -1000 if ignore_index is None else ignore_index
+            ignore_value = 0 if ignore_index is None else ignore_index
             self.criterion = nn.CrossEntropyLoss(
-                ignore_index=ignore_value, weight=self.hparams['class_weights']
+                # ignore_index=ignore_value, weight=self.hparams['class_weights']
             )
         elif loss == 'jaccard':
             # JaccardLoss requires a list of classes to use instead of a class
