@@ -202,7 +202,7 @@ class MyModel(pl.LightningModule):
             The loss tensor.
         """
         x = batch['image']
-        y = batch['mask']-1 # because labels are from 1 to 8, hencle
+        y = batch['mask']
         batch_size = x.shape[0]
         y_hat = self(x) + 1
         loss: Tensor = self.criterion(y_hat, y)
