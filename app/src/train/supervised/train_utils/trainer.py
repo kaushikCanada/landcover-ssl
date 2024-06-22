@@ -244,7 +244,7 @@ class MyModel(pl.LightningModule):
         batch_size = x.shape[0]
         y_hat = self(x)
         loss = self.criterion(y_hat, y)
-        self.log('test_loss', loss, batch_size=batch_size, prog_bar=True)
+        self.log('test_loss', loss, batch_size=batch_size)
         self.test_metrics(y_hat, y)
         self.log_dict(self.test_metrics, batch_size=batch_size, prog_bar=True)
         
