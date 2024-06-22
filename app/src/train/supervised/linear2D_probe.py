@@ -46,5 +46,8 @@ def main():
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
 
+            metrics = trainer.logger.experiment
+            print(metrics)
+
 if __name__=='__main__':
    main()
