@@ -227,9 +227,9 @@ class MyModel(pl.LightningModule):
             dataloader_idx: Index of the current dataloader.
         """
         x = batch['image']
-        y = batch['mask']
+        y = batch['mask'] - 1
         batch_size = x.shape[0]
-        y_hat = self(x) + 1
+        y_hat = self(x)
         loss = self.criterion(y_hat, y)
         self.log('val_loss', loss, batch_size=batch_size)
         self.val_metrics(y_hat, y)
@@ -244,9 +244,9 @@ class MyModel(pl.LightningModule):
             dataloader_idx: Index of the current dataloader.
         """
         x = batch['image']
-        y = batch['mask']
+        y = batch['mask'] - 1
         batch_size = x.shape[0]
-        y_hat = self(x) + 1
+        y_hat = self(x)
         loss = self.criterion(y_hat, y)
         self.log('test_loss', loss, batch_size=batch_size)
         self.test_metrics(y_hat, y)
