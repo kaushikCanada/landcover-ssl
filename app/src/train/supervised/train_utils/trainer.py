@@ -27,9 +27,9 @@ class MyModel(pl.LightningModule):
     #: Whether the goal is to minimize or maximize the performance metric to monitor.
     mode = 'min'
     
-    @property
-    def automatic_optimization(self) -> bool:
-        return False
+    # @property
+    # def automatic_optimization(self) -> bool:
+    #     return False
             
     def __init__(self,
                 model: str = 'unet',
@@ -53,7 +53,7 @@ class MyModel(pl.LightningModule):
             ignore: Arguments to skip when saving hyperparameters.
         """
         super().__init__()
-        self.automatic_optimization = False
+        # self.automatic_optimization = False
         self.weights = weights
         ignore = 'weights'
         self.save_hyperparameters(ignore=ignore)
@@ -207,9 +207,9 @@ class MyModel(pl.LightningModule):
             The loss tensor.
         """
         x = batch['image']
-        y = batch['mask']
+        y = batch['mask'] - 1
         batch_size = x.shape[0]
-        y_hat = self(x) + 1
+        y_hat = self(x)
         loss: Tensor = self.criterion(y_hat, y)
         # self.log('train_loss', loss, batch_size=batch_size)
         # self.train_metrics(y_hat, y)
