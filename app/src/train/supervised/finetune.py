@@ -72,15 +72,18 @@ def train_one_epoch(model, dataloader, optimizer, loss_fn, device):
 
 # Validation Function
 def validate_one_epoch(model, dataloader, loss_fn, device):
-    model.eval()
-    epoch_loss = 0
-    with torch.no_grad():
-        for batch in tqdm(dataloader, desc="Validation", leave=False):
-            images, masks = batch['image'].to(device), batch['mask'].to(device)
-            outputs = model(images)
-            loss = loss_fn(outputs, masks)
-            epoch_loss += loss.item()
-    return epoch_loss / len(dataloader)
+	model.eval()
+	epoch_loss = 0
+	epoch_accuracy = 0
+	with torch.no_grad():
+		for batch in tqdm(dataloader, desc="Validation", leave=False):
+			images, masks = batch['image'].to(device), batch['mask'].to(device)
+			outputs = model(images)
+			loss = loss_fn(outputs, masks)
+			epoch_loss += loss.item()
+			preds = torch.argmax(outputs, dim=1)
+			epoch_accuracy += val_accuracy(preds, mask_labels_1_to_8_to_0_to_7(masks)).item()
+	return epoch_loss / len(dataloader), epoch_accuracy / len(dataloader)
 
 # Test Function
 def test_one_epoch(model, dataloader, loss_fn, device):
@@ -126,8 +129,8 @@ def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num
 
 	for epoch in range(start_epoch, num_epochs):
 		print(f"Epoch {epoch + 1}/{num_epochs}")
-		train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn, device)
-		val_loss = validate_one_epoch(model, val_loader, loss_fn, device)
+		train_loss, train_acc = train_one_epoch(model, train_loader, optimizer, loss_fn, device)
+		val_loss, val_acc = validate_one_epoch(model, val_loader, loss_fn, device)
 		print(f"Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
 		
 		if val_loss < best_loss:
@@ -135,6 +138,9 @@ def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num
 			if resume:
 				save_checkpoint({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer': optimizer.state_dict()}, checkpoint_path)
 				print("Model saved!")
+	# Testing after training
+	test_loss, test_acc = test_one_epoch(model, test_loader, loss_fn, device)
+	print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
 
 
 # def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
