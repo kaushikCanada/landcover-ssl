@@ -35,9 +35,9 @@ parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 
 # Metrics
-train_accuracy = MulticlassAccuracy(num_classes=8).to(device)
-val_accuracy = MulticlassAccuracy(num_classes=8).to(device)
-test_accuracy = MulticlassAccuracy(num_classes=8).to(device)
+train_accuracy = MulticlassAccuracy(num_classes=8).to('cuda:0')
+val_accuracy = MulticlassAccuracy(num_classes=8).to('cuda:0')
+test_accuracy = MulticlassAccuracy(num_classes=8).to('cuda:0')
 
 # Helper function for converting 1-8 labels to 0-7
 def mask_labels_1_to_8_to_0_to_7(mask):
