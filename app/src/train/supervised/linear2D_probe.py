@@ -13,6 +13,23 @@ parser.add_argument('--batch_size', default=32, type=int, metavar='N', help='min
 parser.add_argument('--num_workers', type=int, default=0, metavar='N', help='number of data loader workers')
 parser.add_argument('--checkpoint_dir', default='./checkpoint/', type=Path, metavar='DIR', help='path to checkpoint directory')
 
+# Plotting function
+def plot_losses(trainer):
+            metrics = trainer.logger.experiment
+            metrics_df = metrics.get_scalars()
+            train_loss = metrics_df['train_loss'].values()
+            val_loss = metrics_df['val_loss'].values()
+            epochs = range(len(train_loss))
+            
+            plt.figure(figsize=(10, 5))
+            plt.plot(epochs, train_loss, label='Training Loss')
+            plt.plot(epochs, val_loss, label='Validation Loss')
+            plt.xlabel('Epochs')
+            plt.ylabel('Loss')
+            plt.title('Training and Validation Loss')
+            plt.legend()
+            plt.show()
+            
 def main():
             print("Starting...")
 
@@ -45,9 +62,12 @@ def main():
             trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], accelerator="gpu", devices=[0], num_nodes=1, default_root_dir = dict_args['checkpoint_dir'])
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
-
-            metrics = trainer.logger.experiment
-            print(metrics)
+            # Plot the losses
+            plot_losses(trainer)
+            
+            dm.setup("fit")
+            trainer.test(model, dm.test_dataloader())
+            
 
 if __name__=='__main__':
    main()
