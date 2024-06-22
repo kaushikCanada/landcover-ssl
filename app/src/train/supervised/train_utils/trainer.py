@@ -27,6 +27,10 @@ class MyModel(pl.LightningModule):
     #: Whether the goal is to minimize or maximize the performance metric to monitor.
     mode = 'min'
     
+    @property
+    def automatic_optimization(self) -> bool:
+        return False
+            
     def __init__(self,
                 model: str = 'unet',
                 backbone: str = 'resnet50',
