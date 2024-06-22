@@ -209,7 +209,7 @@ class MyModel(pl.LightningModule):
         loss: Tensor = self.criterion(y_hat, y)
         self.log('train_loss', loss, batch_size=batch_size, prog_bar=True)
         self.train_metrics(y_hat, y)
-        self.log_dict(self.train_metrics, batch_size=batch_size)
+        self.log_dict(self.train_metrics, batch_size=batch_size, prog_bar=True)
         return loss
         
     def validation_step(
@@ -229,7 +229,7 @@ class MyModel(pl.LightningModule):
         loss = self.criterion(y_hat, y)
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=True)
         self.val_metrics(y_hat, y)
-        self.log_dict(self.val_metrics, batch_size=batch_size)
+        self.log_dict(self.val_metrics, batch_size=batch_size, prog_bar=True)
 
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> None:
         """Compute the test loss and additional metrics.
@@ -246,7 +246,7 @@ class MyModel(pl.LightningModule):
         loss = self.criterion(y_hat, y)
         self.log('test_loss', loss, batch_size=batch_size, prog_bar=True)
         self.test_metrics(y_hat, y)
-        self.log_dict(self.test_metrics, batch_size=batch_size)
+        self.log_dict(self.test_metrics, batch_size=batch_size, prog_bar=True)
         
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         """Forward pass of the model.
