@@ -207,9 +207,9 @@ class MyModel(pl.LightningModule):
         batch_size = x.shape[0]
         y_hat = self(x)
         loss: Tensor = self.criterion(y_hat, y)
-        self.log('train_loss', loss, batch_size=batch_size, prog_bar=True)
+        self.log('train_loss', loss, batch_size=batch_size)
         self.train_metrics(y_hat, y)
-        self.log_dict(self.train_metrics, batch_size=batch_size, prog_bar=True)
+        self.log_dict(self.train_metrics, batch_size=batch_size)
         return loss
         
     def validation_step(
@@ -227,7 +227,7 @@ class MyModel(pl.LightningModule):
         batch_size = x.shape[0]
         y_hat = self(x)
         loss = self.criterion(y_hat, y)
-        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True)
+        self.log('val_loss', loss, batch_size=batch_size)
         self.val_metrics(y_hat, y)
         self.log_dict(self.val_metrics, batch_size=batch_size, prog_bar=True)
 
