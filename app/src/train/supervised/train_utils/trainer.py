@@ -259,28 +259,3 @@ class MyModel(pl.LightningModule):
             Output of the model.
         """
         return self.model(*args, **kwargs)
-
-    def on_train_end(self):
-        # Generate and log the plots
-        fig, ax = plt.subplots()
-
-        # Plot training metrics
-        for name, metric in self.train_metrics.items():
-            ax.plot(metric.compute().cpu().numpy(), label=f'train_{name}')
-
-        # Plot validation metrics
-        for name, metric in self.val_metrics.items():
-            ax.plot(metric.compute().cpu().numpy(), label=f'val_{name}')
-
-        # Add legend and titles
-        ax.legend()
-        ax.set_title('Training and Validation Metrics')
-        ax.set_xlabel('Epoch')
-        ax.set_ylabel('Metric Value')
-
-        plt.savefig('metrics.png')
-
-        # Log the figure using logger.experiment
-        # self.logger.experiment.add_figure('Metrics/Train_and_Val_Metrics', fig, self.current_epoch)
-        # Close the figure to avoid memory leaks
-        plt.close(fig)
