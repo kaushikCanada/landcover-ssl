@@ -1,5 +1,6 @@
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import CSVLogger
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import torch
 from pathlib import Path
 from train_utils.trainer import MyModel
