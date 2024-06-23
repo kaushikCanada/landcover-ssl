@@ -27,6 +27,7 @@ def main():
             num_workers = dict_args['num_workers']
             lr = float(dict_args['lr'])
             MODEL_NAME = dict_args['model_name']
+            
             dm = Worldview3LabelledDataModule(
                         root=root,batch_size=batch_size,num_workers=num_workers
                     )
@@ -37,7 +38,7 @@ def main():
 
             checkpoint_callback = ModelCheckpoint(
                 monitor="val_loss",
-                dirpath=dict_args['checkpoint_dir'] + MODEL_NAME + "_logs/",
+                dirpath=str(dict_args['checkpoint_dir']) + MODEL_NAME + "_logs/",
                 save_top_k=1,
                 save_last=True,
             )
@@ -69,7 +70,7 @@ def main():
                                  logger=[csv_logger],
                                  devices=[0], 
                                  num_nodes=1, 
-                                 default_root_dir = dict_args['checkpoint_dir'] + MODEL_NAME + "_logs/")
+                                 default_root_dir = str(dict_args['checkpoint_dir']) + MODEL_NAME + "_logs/")
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
             
