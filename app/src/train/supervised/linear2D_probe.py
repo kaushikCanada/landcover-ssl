@@ -1,4 +1,5 @@
 import pytorch_lightning as pl
+from pytorch_lightning.loggers import CSVLogger
 import torch
 from pathlib import Path
 from train_utils.trainer import MyModel
@@ -31,6 +32,11 @@ def main():
             dm.setup("fit")
             
             net = MyModel()
+
+            csv_logger = CSVLogger(
+                        save_dir=dict_args['checkpoint_dir'],
+                        name="unet_logs"
+                        )
             
             task = MyModel(
                 model="unet",
@@ -43,7 +49,12 @@ def main():
                 lr=lr,
                 patience=10,
             )
-            trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], accelerator="gpu", devices=[0], num_nodes=1, default_root_dir = dict_args['checkpoint_dir'])
+            trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], 
+                                 accelerator="gpu", 
+                                 logger=[csv_logger],
+                                 devices=[0], 
+                                 num_nodes=1, 
+                                 default_root_dir = dict_args['checkpoint_dir'])
             
             trainer.fit(model=task, train_dataloaders = dm.train_dataloader(), val_dataloaders = dm.val_dataloader())
             
