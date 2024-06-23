@@ -141,36 +141,6 @@ def train_model(model, train_loader, val_loader, optimizer, loss_fn, device, num
 	# Testing after training
 	test_loss, test_acc = test_one_epoch(model, test_loader, loss_fn, device)
 	print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
-
-
-# def train_model(model, dataloader, criterion, optimizer, num_epochs=25, device='cuda'):
-# 	model = model.to(device)
-# 	for epoch in tqdm(range(num_epochs)):
-# 		model.train()
-# 		running_loss = 0.0
-# 		i=1
-# 		for batch in dataloader:
-# 			images = batch['image']
-# 			masks = batch['mask']
-# 			print(images.shape)
-# 			print(masks.shape)
-		
-# 			images = images.to(device)
-# 			masks = masks.to(device) - 1  # Shift labels from 1-8 to 0-7 for CrossEntropyLoss
-# 			optimizer.zero_grad()
-# 			outputs = model(images)
-# 			loss = criterion(outputs, masks)
-# 			loss.backward()
-# 			optimizer.step()
-			
-# 			running_loss += loss.item() * images.size(0)
-# 			i=i+1
-# 			if i>5:
-# 				break
-# 		epoch_loss = running_loss / len(dataloader.dataset)
-# 		print(f'Epoch {epoch}/{num_epochs - 1}, Loss: {epoch_loss:.4f}')
-
-# 	return model
     
 def main():
 	args = parser.parse_args()
