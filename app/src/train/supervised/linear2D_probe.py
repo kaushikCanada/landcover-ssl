@@ -33,10 +33,22 @@ def main():
             
             net = MyModel()
 
+            checkpoint_callback = ModelCheckpoint(
+                monitor="val_loss",
+                dirpath=dict_args['checkpoint_dir'],
+                save_top_k=1,
+                save_last=True,
+            )
+
+            early_stopping_callback = EarlyStopping(
+                monitor="val_loss",
+                min_delta=0.00,
+                patience=10,
+            )
             csv_logger = CSVLogger(
                         save_dir=dict_args['checkpoint_dir'],
                         name="unet_logs"
-                        )
+            )
             
             task = MyModel(
                 model="unet",
@@ -50,7 +62,8 @@ def main():
                 patience=10,
             )
             trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], 
-                                 accelerator="gpu", 
+                                 accelerator="gpu",
+                                 callbacks=[checkpoint_callback, early_stopping_callback],
                                  logger=[csv_logger],
                                  devices=[0], 
                                  num_nodes=1, 
