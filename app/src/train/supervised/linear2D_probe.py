@@ -65,7 +65,7 @@ def main():
             )
             trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], 
                                  accelerator="gpu",
-                                 callbacks=[checkpoint_callback, early_stopping_callback],
+                                 callbacks=[early_stopping_callback], #checkpoint_callback,
                                  logger=[csv_logger],
                                  devices=[0], 
                                  num_nodes=1, 
