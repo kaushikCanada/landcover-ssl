@@ -259,3 +259,15 @@ class MyModel(pl.LightningModule):
             Output of the model.
         """
         return self.model(*args, **kwargs)
+    def on_train_end(self):
+        # Generate and log the plots
+        train_fig = self.train_metrics.plot()
+        val_fig = self.val_metrics.plot()
+
+        # Log the figures using logger.experiment
+        self.logger.experiment.add_figure('Metrics/Train_Metrics', train_fig, self.current_epoch)
+        self.logger.experiment.add_figure('Metrics/Val_Metrics', val_fig, self.current_epoch)
+
+        # Close the figures to avoid memory leaks
+        plt.close(train_fig)
+        plt.close(val_fig)
