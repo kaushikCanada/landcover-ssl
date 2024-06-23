@@ -43,5 +43,6 @@ srun python ~/scratch/landcover-ssl/app/src/train/supervised/linear2D_probe.py \
             --lr 0.001 \
             --max_epochs 5 \
             --num_workers 10 \
+            --model_name unet \
             --checkpoint_dir ${log_dir} \
             --data_dir  ${data_dir}
