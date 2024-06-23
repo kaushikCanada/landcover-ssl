@@ -278,8 +278,9 @@ class MyModel(pl.LightningModule):
         ax.set_xlabel('Epoch')
         ax.set_ylabel('Metric Value')
 
-        # Log the figure using logger.experiment
-        self.logger.experiment.add_figure('Metrics/Train_and_Val_Metrics', fig, self.current_epoch)
+        plt.savefig('metrics.png')
 
+        # Log the figure using logger.experiment
+        # self.logger.experiment.add_figure('Metrics/Train_and_Val_Metrics', fig, self.current_epoch)
         # Close the figure to avoid memory leaks
         plt.close(fig)
