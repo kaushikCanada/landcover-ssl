@@ -41,7 +41,7 @@ echo "WORLD_SIZE="$WORLD_SIZE
 srun python ~/scratch/landcover-ssl/app/src/train/supervised/linear2D_probe.py \
             --batch_size 16 \
             --lr 0.001 \
-            --max_epochs 5 \
+            --max_epochs 200 \
             --num_workers 10 \
             --model_name manet \
             --checkpoint_dir ${log_dir} \
