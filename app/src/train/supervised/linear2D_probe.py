@@ -55,7 +55,7 @@ def main():
             
             task = MyModel(
                 model=MODEL_NAME,
-                backbone="resnet50",
+                backbone="resnet152",
                 weights=None,
                 in_channels=11,
                 num_classes=8,
@@ -66,7 +66,7 @@ def main():
             )
             trainer = pl.Trainer(max_epochs=dict_args['max_epochs'], 
                                  accelerator="gpu",
-                                 callbacks=[early_stopping_callback], #checkpoint_callback,
+                                 # callbacks=[early_stopping_callback, checkpoint_callback],
                                  logger=[csv_logger],
                                  devices=[0], 
                                  num_nodes=1, 
