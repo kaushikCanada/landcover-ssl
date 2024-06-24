@@ -73,20 +73,30 @@ class MyModel(pl.LightningModule):
         if model == 'unet':
                 self.model = smp.Unet(
                     encoder_name=backbone,
-                    encoder_weights='imagenet' if weights is True else None,
+                    encoder_weights=None,
                     in_channels=in_channels,
                     classes=num_classes,
                 )
         elif model == 'deeplabv3+':
             self.model = smp.DeepLabV3Plus(
                 encoder_name=backbone,
-                encoder_weights='imagenet' if weights is True else None,
+                encoder_weights=None,
                 in_channels=in_channels,
                 classes=num_classes,
             )
-        elif model == 'fcn':
-            self.model = FCN(
-                in_channels=in_channels, classes=num_classes, num_filters=num_filters
+        elif model == 'unet++':
+            self.model = smp.UnetPlusPlus(
+                encoder_name=backbone,
+                encoder_weights=None,
+                in_channels=in_channels,
+                classes=num_classes,
+            )
+        elif model == 'manet':
+            self.model = smp.MAnet(
+                encoder_name=backbone,
+                encoder_weights=None,
+                in_channels=in_channels,
+                classes=num_classes,
             )
         else:
             raise ValueError(
