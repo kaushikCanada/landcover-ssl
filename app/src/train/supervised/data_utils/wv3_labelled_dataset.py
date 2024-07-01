@@ -122,7 +122,7 @@ class Worldview3LabelledDataset(NonGeoDataset):
         msi = self._load_image(files["msi"])
         ndvi = self._load_image(files["ndvi"], shape=msi.shape[1:])
         ndwi = self._load_image(files["ndwi"], shape=msi.shape[1:])
-        pisi = self._load_image(files["pisi"], shape=msi.shape[1:])
+        pisi = self._load_image(files["pisi"], shape=msi.shape[1:]).clamp(min= -50, max= 50)
         image = torch.cat(tensors=[msi, ndvi, ndwi, pisi], dim=0)
 
         sample = {"image": image}
