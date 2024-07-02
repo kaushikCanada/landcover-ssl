@@ -39,10 +39,18 @@ def load_image(path: str, shape: Optional[Sequence[int]] = None) -> Tensor:
             
 # Function to load the trained model
 def load_model(checkpoint_path, device):
-    model = smp.Unet(encoder_name="resnet50", encoder_weights=None, in_channels=11, classes=8)
-    checkpoint = torch.load(checkpoint_path, map_location=device)
-    model.load_state_dict(checkpoint['state_dict'])
-    model.to(device)
+    task = MyModel(
+    model="unet",
+    backbone="resnet50",
+    weights=None,
+    in_channels=11,
+    num_classes=8,
+    loss="ce",
+    ignore_index=None,
+    lr=0.001,
+    patience=10,
+    )
+    model = task.load_from_checkpoint(checkpoint_path, map_location=device)
     model.eval()
     return model
 
