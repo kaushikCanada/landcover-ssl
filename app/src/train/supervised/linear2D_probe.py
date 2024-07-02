@@ -57,7 +57,7 @@ def main():
                 model=MODEL_NAME,
                 backbone="resnet152",
                 weights=None,
-                in_channels=11,
+                in_channels=10,
                 num_classes=8,
                 loss="ce",
                 ignore_index=None,
