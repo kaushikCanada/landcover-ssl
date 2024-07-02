@@ -210,8 +210,8 @@ class Worldview3LabelledDataset(NonGeoDataset):
         ndvi = percentile_normalization(ndvi, lower=0, upper=100, axis=(0, 1))
         ndwi = sample["image"][-2].numpy()
         ndwi = percentile_normalization(ndwi, lower=0, upper=100, axis=(0, 1))
-        pisi = sample["image"][-1].numpy()
-        pisi = percentile_normalization(pisi, lower=0, upper=100, axis=(0, 1))
+        # pisi = sample["image"][-1].numpy()
+        # pisi = percentile_normalization(pisi, lower=0, upper=100, axis=(0, 1))
 
         showing_mask = "mask" in sample
         showing_prediction = "prediction" in sample
@@ -232,8 +232,8 @@ class Worldview3LabelledDataset(NonGeoDataset):
         axs[1].axis("off")
         axs[2].imshow(ndwi, cmap = plt.cm.plasma)
         axs[2].axis("off")
-        axs[3].imshow(pisi, cmap = plt.cm.Greys)
-        axs[3].axis("off")
+        # axs[3].imshow(pisi, cmap = plt.cm.Greys)
+        # axs[3].axis("off")
         if showing_mask:
             axs[4].imshow(mask, vmin=1, vmax=8, cmap=cmap, interpolation="none")
             axs[4].axis("off")
@@ -248,7 +248,7 @@ class Worldview3LabelledDataset(NonGeoDataset):
             axs[0].set_title("MSI")
             axs[1].set_title("NDVI")
             axs[2].set_title("NDWI")
-            axs[3].set_title("PISI")
+            # axs[3].set_title("PISI")
 
             if showing_mask:
                 axs[4].set_title("GT")
