@@ -78,9 +78,11 @@ def predict(image_path, model, device):
     # print(image_path,ndvi_path)
     ndvi = load_image(ndvi_path, shape=image.shape[1:])
     ndwi = load_image(ndwi_path, shape=image.shape[1:])
-    pisi = load_image(pisi_path, shape=image.shape[1:])
+    # pisi = load_image(pisi_path, shape=image.shape[1:])
 
-    image = torch.cat(tensors=[image, ndvi, ndwi, pisi], dim=0).nan_to_num()
+    image = torch.cat(tensors=[image, ndvi, ndwi
+                               # , pisi
+                              ], dim=0).nan_to_num()
 
     image = K.Normalize(mean=WORLDVIEW3_NORMALIZE['mean'], std=WORLDVIEW3_NORMALIZE['std'])(image).to(device)
     # image = preprocess_image(image_path)
@@ -89,8 +91,8 @@ def predict(image_path, model, device):
     # print(image.shape)
 
     with torch.no_grad():
-        output = model(image)+1
-        output = torch.argmax(output, dim=1).squeeze(0).cpu().numpy()
+        output = model(image)
+        output = (torch.argmax(output, dim=1).squeeze(0).cpu().numpy()) + 1
     
     return output,image
 
